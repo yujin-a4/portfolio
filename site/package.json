@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "generate-embeddings": "npx tsx scripts/generate-embeddings.ts"
   },
   "dependencies": {
     "@google/genai": "^1.50.1",

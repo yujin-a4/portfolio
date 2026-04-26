@@ -137,6 +137,13 @@ function DetailPanel({ item, onAsk }: { item: PortfolioMenuItem; onAsk: (prompt:
   )
 }
 
+function renderInline(text: string) {
+  const parts = text.split(/\*\*(.*?)\*\*/g)
+  return parts.map((part, i) =>
+    i % 2 === 1 ? <strong key={i}>{part}</strong> : part
+  )
+}
+
 /* ── ChatPanel ── */
 function ChatPanel({ messages, input, streaming, activeCategoryId, onInputChange, onSend, className = '' }: {
   messages: Message[]; input: string; streaming: boolean; activeCategoryId: PortfolioCategoryId;
@@ -165,7 +172,20 @@ function ChatPanel({ messages, input, streaming, activeCategoryId, onInputChange
                 ? { background: 'var(--accent)', color: '#fff' }
                 : { background: 'var(--surface-2)', border: '1px solid var(--border)', color: 'var(--tx-2)' }}
             >
-              {msg.content || (
+              {msg.content ? (
+                <span className="block space-y-1">
+                  {msg.content.split('\n').map((line, j) => {
+                    if (!line.trim()) return <span key={j} className="block h-1" />
+                    const isBullet = /^[-•·]\s/.test(line)
+                    return (
+                      <span key={j} className={`block ${isBullet ? 'flex gap-1.5 items-start' : ''}`}>
+                        {isBullet && <span className="shrink-0 mt-0.5" style={{ color: 'var(--accent)' }}>›</span>}
+                        <span>{renderInline(isBullet ? line.replace(/^[-•·]\s/, '') : line)}</span>
+                      </span>
+                    )
+                  })}
+                </span>
+              ) : (
                 <span className="inline-flex gap-1.5">
                   {[0, 120, 240].map((d) => (
                     <span key={d} className="h-1.5 w-1.5 animate-pulse rounded-full" style={{ background: 'var(--tx-3)', animationDelay: `${d}ms` }} />

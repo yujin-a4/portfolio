@@ -5,6 +5,7 @@ import {
   buildPortfolioItemContext,
   buildTopicContext,
 } from '@/lib/ai-context'
+import { retrieveRelevant } from '@/lib/rag'
 
 type ChatMessage = {
   role: 'user' | 'assistant'
@@ -52,13 +53,21 @@ export async function POST(req: Request) {
       return new Response('At least one user message is required', { status: 400 })
     }
 
+    const lastUserMessage = [...messages].reverse().find((m) => m.role === 'user')?.content ?? ''
+
     const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY })
+
+    const ragContext = await retrieveRelevant(lastUserMessage).catch(() => '')
+
     const systemInstruction = [
       AI_YUJIN_SYSTEM_PROMPT,
+      ragContext ? `=== 관련 포트폴리오 컨텍스트 ===\n${ragContext}` : '',
       buildPersonaContext(personaId),
       buildTopicContext(topicId),
       buildPortfolioItemContext(activeItemId),
-    ].join('\n\n')
+    ]
+      .filter(Boolean)
+      .join('\n\n')
 
     const stream = await ai.models.generateContentStream({
       model: process.env.GEMINI_MODEL || 'gemini-2.5-flash',

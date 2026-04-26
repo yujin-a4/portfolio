@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>강유진 | AI 서비스 기획자</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #07070f;
+      --surface: #0e0e1c;
+      --card: #13132a;
+      --card-hover: #1a1a35;
+      --border: #1c1c38;
+      --border-hi: #2e2e55;
+      --primary: #7c5cfc;
+      --primary-light: #a78bfa;
+      --accent: #38d9f5;
+      --warm: #ff6b6b;
+      --success: #34d399;
+      --text: #e8e8f4;
+      --muted: #8888aa;
+      --dim: #50506a;
+      --grad: linear-gradient(135deg, #7c5cfc, #38d9f5);
+      --grad-warm: linear-gradient(135deg, #ff6b6b, #ffa94d);
+      --glow: 0 0 48px rgba(124,92,252,0.18);
+      --r: 14px; --rs: 8px; --rf: 9999px;
+      --ease: 0.28s cubic-bezier(0.4,0,0.2,1);
+      --font: 'Inter', 'Noto Sans KR', sans-serif;
+    }
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{scroll-behavior:smooth}
+    body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.65;-webkit-font-smoothing:antialiased}
+    a{color:inherit;text-decoration:none}
+    img{max-width:100%;display:block}
+
+    .wrap{max-width:1100px;margin:0 auto;padding:0 28px}
+    .sec{padding:96px 0}
+
+    /* ── NAV ── */
+    nav{position:fixed;top:0;left:0;right:0;z-index:900;height:62px;display:flex;align-items:center;transition:var(--ease)}
+    nav.on{background:rgba(7,7,15,.88);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+    .nav-in{display:flex;align-items:center;justify-content:space-between;width:100%}
+    .nav-logo{font-weight:800;font-size:.95rem;letter-spacing:-.02em}
+    .nav-logo span{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .nav-links{display:flex;gap:28px;list-style:none}
+    .nav-links a{font-size:.83rem;font-weight:500;color:var(--muted);transition:color var(--ease)}
+    .nav-links a:hover{color:var(--text)}
+
+    /* ── HERO ── */
+    #hero{position:relative;min-height:100vh;display:flex;align-items:center;padding:100px 0 56px;overflow:hidden}
+    .hero-glow{position:absolute;inset:0;pointer-events:none}
+    .hero-glow::before{content:'';position:absolute;top:-15%;left:-8%;width:560px;height:560px;background:radial-gradient(circle,rgba(124,92,252,.13) 0%,transparent 68%)}
+    .hero-glow::after{content:'';position:absolute;bottom:-20%;right:-5%;width:440px;height:440px;background:radial-gradient(circle,rgba(56,217,245,.08) 0%,transparent 68%)}
+    .hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+    .hero-badge{display:inline-flex;align-items:center;gap:7px;padding:5px 14px;background:rgba(124,92,252,.1);border:1px solid rgba(124,92,252,.28);border-radius:var(--rf);font-size:.78rem;color:var(--primary-light);margin-bottom:22px}
+    .hero-badge i{width:6px;height:6px;background:var(--primary);border-radius:50%;animation:blink 2s infinite}
+    @keyframes blink{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(1.5)}}
+    .hero-title{font-size:clamp(2.2rem,4.5vw,3.6rem);font-weight:900;line-height:1.1;letter-spacing:-.03em;margin-bottom:10px}
+    .hero-title .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+    .hero-role{font-size:1.1rem;color:var(--muted);margin-bottom:18px}
+    .hero-tag{font-size:.93rem;color:var(--muted);max-width:460px;line-height:1.75;margin-bottom:36px;border-left:2px solid var(--primary);padding-left:16px}
+    .cta-row{display:flex;gap:12px;flex-wrap:wrap}
+    .btn{display:inline-flex;align-items:center;gap:7px;padding:12px 26px;font-weight:600;font-size:.88rem;border-radius:var(--rf);border:none;cursor:pointer;transition:var(--ease);font-family:var(--font)}
+    .btn-p{background:var(--grad);color:#fff}
+    .btn-p:hover{transform:translateY(-2px);box-shadow:0 12px 32px rgba(124,92,252,.42)}
+    .btn-o{background:transparent;color:var(--text);border:1px solid var(--border-hi)}
+    .btn-o:hover{background:var(--card);border-color:var(--primary);color:var(--primary-light)}
+
+    /* Hero card */
+    .hero-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:28px;position:relative;overflow:hidden}
+    .hero-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad)}
+    .stat-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .stat-box{padding:18px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rs);text-align:center}
+    .stat-n{font-size:1.9rem;font-weight:900;background:var(--grad);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;line-height:1;margin-bottom:6px}
+    .stat-l{font-size:.72rem;color:var(--muted);line-height:1.45}
+
+    /* ── SECTION HEADER ── */
+    .sh{margin-bottom:52px}
+    .sb{display:inline-flex;align-items:center;gap:8px;font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--primary-light);margin-bottom:14px}
+    .sb::before{content:'';width:18px;height:2px;background:var(--primary)}
+    .st{font-size:clamp(1.7rem,3.2vw,2.4rem);font-weight:800;letter-spacing:-.02em;line-height:1.2}
+    .sd{margin-top:14px;color:var(--muted);font-size:1rem;max-width:580px;line-height:1.75}
+
+    /* ── PROJECT SECTION ── */
+    .proj{padding:72px 0;border-bottom:1px solid var(--border)}
+    .proj-num{font-size:.72rem;font-weight:700;letter-spacing:.1em;color:var(--primary);text-transform:uppercase;margin-bottom:10px}
+    .proj-title{font-size:clamp(1.5rem,2.8vw,2.1rem);font-weight:800;letter-spacing:-.02em;margin-bottom:7px}
+    .proj-sub{font-size:.95rem;color:var(--muted);font-style:italic;margin-bottom:22px;line-height:1.6}
+    .proj-meta{display:flex;gap:24px;flex-wrap:wrap;margin-bottom:36px;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rs)}
+    .mi{display:flex;flex-direction:column;gap:3px}
+    .ml{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--dim)}
+    .mv{font-size:.88rem;font-weight:500}
+    .mv a{color:var(--accent);transition:opacity var(--ease)}
+    .mv a:hover{opacity:.7}
+
+    /* Two-col grid */
+    .pg{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-bottom:28px}
+    .pg.wide{grid-template-columns:3fr 2fr}
+
+    /* Content blocks */
+    .cb{margin-bottom:32px}
+    .bl{display:flex;align-items:center;gap:10px;font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--primary-light);margin-bottom:14px}
+    .bl::after{content:'';flex:1;height:1px;background:var(--border)}
+    .cb h4{font-size:1rem;font-weight:700;margin-bottom:9px;margin-top:16px;color:var(--text)}
+    .cb h4:first-child{margin-top:0}
+    .cb p{color:var(--muted);line-height:1.8;margin-bottom:10px;font-size:.93rem}
+    .cb p:last-child{margin-bottom:0}
+
+    .hq{padding:16px 20px;background:rgba(124,92,252,.06);border-left:3px solid var(--primary);border-radius:0 var(--rs) var(--rs) 0;margin:16px 0}
+    .hq p{color:var(--text);font-size:.92rem;line-height:1.75;margin:0}
+
+    /* Table */
+    .dt{width:100%;border-collapse:collapse;font-size:.86rem}
+    .dt th{padding:9px 14px;text-align:left;background:var(--surface);color:var(--muted);font-weight:600;font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--border)}
+    .dt td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text);vertical-align:top;line-height:1.55}
+    .dt tr:last-child td{border-bottom:none}
+    .dt tr:hover td{background:var(--surface)}
+    .dt .hi td{background:rgba(124,92,252,.07);color:var(--primary-light);font-weight:600}
+
+    /* Tags */
+    .tags{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}
+    .tag{padding:4px 11px;border-radius:var(--rf);font-size:.72rem;font-weight:600}
+    .tp{background:rgba(124,92,252,.14);color:var(--primary-light);border:1px solid rgba(124,92,252,.3)}
+    .ta{background:rgba(56,217,245,.1);color:var(--accent);border:1px solid rgba(56,217,245,.28)}
+    .tw{background:rgba(255,107,107,.1);color:#ff8888;border:1px solid rgba(255,107,107,.28)}
+    .ts{background:rgba(52,211,153,.1);color:var(--success);border:1px solid rgba(52,211,153,.28)}
+
+    /* Result card */
+    .rc{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:26px;position:relative;overflow:hidden;margin-bottom:28px}
+    .rc::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--grad)}
+
+    /* Takeaway */
+    .tw-box{background:linear-gradient(135deg,rgba(124,92,252,.07),rgba(56,217,245,.04));border:1px solid rgba(124,92,252,.18);border-radius:var(--r);padding:26px 28px;margin-top:28px}
+    .tw-label{font-size:.73rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--primary-light);margin-bottom:10px}
+    .tw-box p{color:var(--text);line-height:1.8;font-size:.93rem}
+
+    /* ── IMAGE SLOTS ── */
+    .img-slot{background:var(--card);border:1.5px dashed var(--border-hi);border-radius:var(--r);overflow:hidden;position:relative;min-height:210px;display:flex;align-items:center;justify-content:center;transition:var(--ease)}
+    .img-slot img{width:100%;height:100%;object-fit:cover;border-radius:var(--r)}
+    .iph{display:flex;flex-direction:column;align-items:center;gap:10px;padding:28px;text-align:center}
+    .iph-icon{width:44px;height:44px;border-radius:10px;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:1.2rem}
+    .iph-lbl{font-size:.78rem;color:var(--dim);line-height:1.5}
+    .iph-lbl strong{display:block;color:var(--muted);margin-bottom:3px;font-size:.8rem}
+    .eov{display:none;position:absolute;inset:0;background:rgba(124,92,252,.1);align-items:center;justify-content:center;border-radius:var(--r)}
+    .eov-txt{background:var(--card);border:1px solid var(--primary);padding:8px 18px;border-radius:var(--rf);font-size:.8rem;font-weight:600;color:var(--primary-light)}
+    .img-slot.em{cursor:pointer;border-color:var(--primary)}
+    .img-slot.em:hover{background:var(--card-hover);box-shadow:var(--glow)}
+    .img-slot.em:hover .eov{display:flex}
+
+    /* ── SKILLS ── */
+    .skills-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+    .sk-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px;transition:var(--ease)}
+    .sk-card:hover{border-color:var(--border-hi);transform:translateY(-2px)}
+    .sk-ttl{display:flex;align-items:center;gap:9px;font-size:.88rem;font-weight:700;margin-bottom:14px}
+    .sk-ico{width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1rem}
+    .sk-items{display:flex;flex-wrap:wrap;gap:7px}
+    .sk-i{padding:3px 11px;background:var(--surface);border:1px solid var(--border);border-radius:var(--rf);font-size:.75rem;color:var(--muted)}
+
+    /* ── BONUS ── */
+    .bonus-g{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+    .poc-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:22px}
+    .poc-card h4{font-size:.95rem;font-weight:700;margin-bottom:8px}
+    .poc-card p{font-size:.85rem;color:var(--muted);line-height:1.7}
+    .poc-result{display:inline-block;margin-top:10px;font-size:.78rem;color:var(--success);background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);padding:3px 10px;border-radius:var(--rf)}
+
+    /* ── CONTACT ── */
+    #contact{padding:96px 0;text-align:center}
+    .contact-card{background:var(--card);border:1px solid var(--border);border-radius:22px;padding:60px 36px;max-width:660px;margin:0 auto;position:relative;overflow:hidden}
+    .contact-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 50% 0%,rgba(124,92,252,.1),transparent 60%);pointer-events:none}
+    .c-links{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-top:28px}
+
+    /* ── FOOTER ── */
+    footer{border-top:1px solid var(--border);padding:28px 0;text-align:center;color:var(--dim);font-size:.8rem}
+
+    /* ── FAB & MODAL ── */
+    .fab{position:fixed;bottom:26px;right:26px;z-index:999;display:flex;flex-direction:column;align-items:flex-end;gap:9px}
+    .fab-tip{background:var(--card);border:1px solid var(--border);padding:5px 13px;border-radius:var(--rf);font-size:.75rem;white-space:nowrap;color:var(--muted);display:none}
+    .fab-btn{width:50px;height:50px;border-radius:50%;background:var(--card);border:1px solid var(--border-hi);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--ease);font-size:1rem;box-shadow:0 4px 18px rgba(0,0,0,.3)}
+    .fab-btn:hover{background:var(--card-hover);border-color:var(--primary);box-shadow:var(--glow)}
+    .fab-btn.on{background:var(--primary);border-color:var(--primary)}
+
+    .mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(5px);z-index:9999;align-items:center;justify-content:center}
+    .mo.open{display:flex}
+    .mo-box{background:var(--card);border:1px solid var(--border-hi);border-radius:var(--r);padding:28px;width:100%;max-width:460px;margin:0 20px}
+    .mo-box h3{font-size:1.05rem;font-weight:700;margin-bottom:6px}
+    .mo-box .mo-lbl{font-size:.82rem;color:var(--muted);margin-bottom:18px;line-height:1.55}
+    .mo-box input{width:100%;padding:11px 14px;background:var(--surface);border:1px solid var(--border-hi);border-radius:var(--rs);color:var(--text);font-family:var(--font);font-size:.88rem;outline:none;margin-bottom:8px;transition:border-color var(--ease)}
+    .mo-box input:focus{border-color:var(--primary)}
+    .mo-note{font-size:.74rem;color:var(--dim);margin-bottom:16px;line-height:1.5}
+    .mo-acts{display:flex;gap:9px;justify-content:flex-end}
+
+    /* ── ANIMATIONS ── */
+    .ai{opacity:0;transform:translateY(22px);transition:opacity .55s ease,transform .55s ease}
+    .ai.v{opacity:1;transform:none}
+    .sc>*{opacity:0;transform:translateY(18px);transition:opacity .45s ease,transform .45s ease}
+    .sc.v>*:nth-child(1){opacity:1;transform:none;transition-delay:.0s}
+    .sc.v>*:nth-child(2){opacity:1;transform:none;transition-delay:.08s}
+    .sc.v>*:nth-child(3){opacity:1;transform:none;transition-delay:.16s}
+    .sc.v>*:nth-child(4){opacity:1;transform:none;transition-delay:.24s}
+    .sc.v>*:nth-child(5){opacity:1;transform:none;transition-delay:.32s}
+    .sc.v>*:nth-child(6){opacity:1;transform:none;transition-delay:.40s}
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:860px){
+      .hero-grid,.pg,.pg.wide{grid-template-columns:1fr}
+      .proj-meta{gap:16px}
+    }
+    @media(max-width:600px){
+      .nav-links{display:none}
+      .sec,.proj{padding:52px 0}
+      .stat-grid{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="wrap">
+    <div class="nav-in">
+      <div class="nav-logo"><span>강유진</span> · AI 서비스 기획자</div>
+      <ul class="nav-links">
+        <li><a href="#projects">프로젝트</a></li>
+        <li><a href="#skills">스킬</a></li>
+        <li><a href="#contact">연락처</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-glow"></div>
+  <div class="wrap">
+    <div class="hero-grid">
+      <div class="ai">
+        <div class="hero-badge"><i></i> YBM AI Lab · 2024~현재</div>
+        <h1 class="hero-title">
+          AI 기술 문해력으로<br>
+          <span class="g">직접 빌드하고</span><br>
+          증명하는 기획자
+        </h1>
+        <p class="hero-role">AI 서비스 기획자 / Product Manager</p>
+        <p class="hero-tag">
+          사용자 리서치 데이터를 설계안으로 만들고, 개발사에 전달하고, 직접 코드로 구현하는 경험을 모두 갖춘 서비스 기획자입니다.
+        </p>
+        <div class="cta-row">
+          <a href="#projects" class="btn btn-p">프로젝트 보기 →</a>
+          <a href="mailto:ybm.ailab@gmail.com" class="btn btn-o">연락하기</a>
+        </div>
+      </div>
+      <div class="ai" style="transition-delay:.18s">
+        <div class="hero-card">
+          <div class="stat-grid sc">
+            <div class="stat-box">
+              <div class="stat-n" data-count="229">0</div>
+              <div class="stat-l">FGI 참여<br>교사 수</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-n" data-count="1976">0</div>
+              <div class="stat-l">교과서 연계<br>자료 구축</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-n">87.32%</div>
+              <div class="stat-l">신학기<br>최고 참여율</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-n">30+</div>
+              <div class="stat-l">AIDT 검정<br>심사 항목</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects" class="sec">
+  <div class="wrap">
+    <div class="sh ai">
+      <div class="sb">Main Projects</div>
+      <h2 class="st">기획하고, 검증하고, 만들었습니다</h2>
+      <p class="sd">사용자 데이터에서 출발해 실제 서비스로 연결한 3가지 프로젝트입니다.</p>
+    </div>
+
+    <!-- ────── PROJECT 01 ────── -->
+    <div class="proj ai" id="project-1">
+      <div class="proj-num">MAIN PROJECT 01</div>
+      <h2 class="proj-title">클래스캔버스 서비스 개편 기획</h2>
+      <p class="proj-sub">"교과서 연계 쌍방향 수업 자료 1,976건을 직접 설계해 플랫폼 활용률을 끌어올리다"</p>
+      <div class="proj-meta">
+        <div class="mi"><span class="ml">기간</span><span class="mv">2025.01 ~ 2025.09</span></div>
+        <div class="mi"><span class="ml">소속</span><span class="mv">YBM AI Lab</span></div>
+        <div class="mi"><span class="ml">역할</span><span class="mv">메인 기획 담당</span></div>
+        <div class="mi"><span class="ml">URL</span><span class="mv"><a href="https://www.ybmcloud.com/classcanvas.html" target="_blank">ybmcloud.com ↗</a></span></div>
+      </div>
+
+      <div class="pg wide ai">
+        <div class="cb">
+          <div class="bl">Problem</div>
+          <h4>기능은 있었다. 콘텐츠가 없었다.</h4>
+          <p>클래스캔버스의 기반인 Aspen Class는 퀴즈 제작, 쌍방향 수업, QR 공유 등 교사가 원하는 기능을 이미 갖추고 있었다. 그러나 2025년 4월 1차 오픈 당시에는 YBM 교과서와 직접 연결된 수업 자료가 없었다.</p>
+          <div class="hq">
+            <p>데이터가 가리키는 방향은 하나였다.<br><strong>자료를 먼저 채워야 한다. 그리고 영어에만 집중하면 안 된다.</strong></p>
+          </div>
+          <p style="font-size:.85rem;color:var(--muted)">Y클라우드 활성 사용자 16,278명 분석 → 영어 과목 조회 비중 78% / 초등 영어 교사 사용률 87.4% / 2024.09 FGI 약 70명 참여 교사 대다수 "쌍방향 수업 기능 존재 자체를 모름"</p>
+          <div class="tags">
+            <span class="tag tp">데이터 기반 의사결정</span>
+            <span class="tag ta">FGI 분석</span>
+            <span class="tag tw">에듀테크</span>
+          </div>
+        </div>
+        <div>
+          <div class="img-slot" data-image-id="cc-main" data-image-label="클래스캔버스 서비스 화면 캡처 — 내 보관함 + YBM 자료 가져오기 모달 팝업">
+            <div class="iph"><div class="iph-icon">🖼</div><div class="iph-lbl"><strong>클래스캔버스 메인 화면</strong>내 보관함 + YBM 자료 가져오기 모달</div></div>
+            <div class="eov"><span class="eov-txt">+ 이미지 추가</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai">
+        <div class="bl">My Role — 기획한 것들</div>
+        <div class="pg">
+          <div class="cb" style="margin-bottom:0">
+            <h4>1. "YBM 자료 가져오기" 유저 플로우 설계</h4>
+            <p>학교급 → 과목 → 대단원/중단원 순 필터링. 교사가 수업을 준비할 때 실제로 생각하는 순서("나는 중학교 2학년 영어 3단원을 가르친다")를 그대로 따른 탐색 동선 설계. 과목 수가 DB 업데이트에 따라 유동적으로 변해 고정 탭 UI 대신 스와이프·좌우 이동 버튼 채택.</p>
+            <h4>2. 자료 품질 설계 — "수업 도구"로 만들기</h4>
+            <p>교사 혼자서는 만들기 어려운 쌍방향 수업 자료를 제공하도록 편집팀 교육 및 제작 가이드 설계. 초·중·고 전 학교급, 7개 과목 다과목 동시 구축 전략.</p>
+            <h4>3. 편집창 UX + 폴더 시스템</h4>
+            <p>퀴즈 템플릿·YBM 자료·갤러리 접근성 향상, 저장 버튼 UI 추가, QR 공유 기능. 최대 12개 폴더, 반응형 팝업창 설계.</p>
+            <h4>4. 외부 개발사 협업</h4>
+            <p>화면 기획서 v1.0 → v1.2 → v2.0 → v2.1 → v2.2 → v2.3. 기술 제약(섬네일 크기 조정 불가 등) 확인 시 기획 수정·재전달 반복 사이클.</p>
+          </div>
+          <div>
+            <div class="img-slot" data-image-id="cc-wireframe" data-image-label="YBM 자료 가져오기 화면 기획서 — 학교급/과목/단원 필터링 구조">
+              <div class="iph"><div class="iph-icon">📐</div><div class="iph-lbl"><strong>화면 기획서</strong>학교급/과목/단원 필터링 구조</div></div>
+              <div class="eov"><span class="eov-txt">+ 이미지 추가</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai" style="overflow-x:auto;margin-bottom:28px">
+        <div class="bl">자료 구축 현황 (2026.04 기준)</div>
+        <table class="dt">
+          <thead><tr><th>과목</th><th>자료 수</th></tr></thead>
+          <tbody>
+            <tr><td>수학 (초등 3~6학년)</td><td>942건</td></tr>
+            <tr><td>음악 (초·중·고)</td><td>371건</td></tr>
+            <tr><td>체육 (초·중·고)</td><td>311건</td></tr>
+            <tr><td>영어 (초·중·고)</td><td>195건</td></tr>
+            <tr><td>실과·한문·보건</td><td>157건</td></tr>
+            <tr class="hi"><td><strong>합계</strong></td><td><strong>1,976건</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rc ai">
+        <div class="bl">Result — GA 지표 (개편 후 6개월)</div>
+        <div style="overflow-x:auto">
+          <table class="dt">
+            <thead><tr><th>월</th><th>활성 사용자</th><th>참여율</th><th>평균 참여 시간</th></tr></thead>
+            <tbody>
+              <tr><td>10월 (개편 직후)</td><td>170명</td><td>80.39%</td><td>4분 17초</td></tr>
+              <tr><td>11월</td><td>132명</td><td>80.08%</td><td>1분 49초</td></tr>
+              <tr><td>12월</td><td>190명</td><td>78.24%</td><td>3분 13초</td></tr>
+              <tr><td>1월 (방학)</td><td>137명</td><td>78.21%</td><td><strong>6분 47초 ↑</strong></td></tr>
+              <tr><td>2월</td><td>175명</td><td>81.83%</td><td>5분 59초</td></tr>
+              <tr class="hi"><td>3월 (신학기)</td><td><strong>296명 (+74%)</strong></td><td><strong>87.32%</strong></td><td>2분 27초</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:18px">
+          <div class="img-slot" data-image-id="cc-ga" data-image-label="GA 참여율 추이 그래프 — 6개월 라인 차트">
+            <div class="iph"><div class="iph-icon">📊</div><div class="iph-lbl"><strong>GA 참여율 추이 그래프</strong>6개월 라인 차트 · 참여율 6개월 연속 78% 이상</div></div>
+            <div class="eov"><span class="eov-txt">+ 이미지 추가</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tw-box ai">
+        <div class="tw-label">Takeaway</div>
+        <p>"도구를 주는 것"과 "도구 + 콘텐츠를 주는 것"의 차이를 수치로 확인한 프로젝트. 기술 제약을 기획에 반영하는 반복 사이클이 실무에서 어떻게 돌아가는지 직접 체득했다. 기획서는 한 번 쓰고 끝나는 문서가 아니라, v2.3까지 오며 살아있는 문서임을 몸으로 익혔다.</p>
+      </div>
+      <div class="tags ai">
+        <span class="tag tp">화면 기획서 v2.3</span><span class="tag tp">유저 플로우</span><span class="tag ta">GA 분석</span><span class="tag ta">외부 개발사 협업</span><span class="tag tw">에듀테크</span><span class="tag ts">1,976건 자료 구축</span>
+      </div>
+    </div>
+
+    <!-- ────── PROJECT 02 ────── -->
+    <div class="proj ai" id="project-2" style="margin-top:48px">
+      <div class="proj-num">MAIN PROJECT 02</div>
+      <h2 class="proj-title">AI 디지털교과서 — 사용자 리서치 기반 서비스 개선</h2>
+      <p class="proj-sub">"229명 교사의 목소리를 데이터로 정리하고, 설계안으로 만들어 개발사에 전달하다"</p>
+      <div class="proj-meta">
+        <div class="mi"><span class="ml">기간</span><span class="mv">2024.05 ~ 현재</span></div>
+        <div class="mi"><span class="ml">소속</span><span class="mv">YBM AI Lab</span></div>
+        <div class="mi"><span class="ml">역할</span><span class="mv">FGI 설계·수행·분석 / 품질관리 체계 설계 / 개선안 기획</span></div>
+        <div class="mi"><span class="ml">규모</span><span class="mv">초·중·고 영어·수학 전 과목 / 검정 심사 30개+ 항목</span></div>
+      </div>
+
+      <div class="pg ai">
+        <div class="cb">
+          <div class="bl">Problem</div>
+          <p>YBM이 교육부 검정 심사에 AI 디지털교과서를 출원했다. LKT 기반 학습진단, AI 보조교사(실시간 수업 모니터링), AI 튜터, 음성인식 말하기 연습 등 다수의 AI 기능이 탑재된 클라우드 기반 교육 플랫폼이었다.</p>
+          <p>두 가지 과제가 동시에 있었다. ① 30개 이상 검정 심사 항목 통과 ② 실제 교사가 현장에서 이 서비스를 어떻게 받아들이는지 사전 파악 후 제품에 반영.</p>
+          <div class="tags">
+            <span class="tag tp">FGI 설계·수행</span><span class="tag ta">품질관리 체계</span><span class="tag tw">교육부 검정</span>
+          </div>
+        </div>
+        <div>
+          <div class="img-slot" data-image-id="aidt-overview" data-image-label="4개 업무 축 인포그래픽 — FGI / 품질관리 / 접근성 / 자체기술검증">
+            <div class="iph"><div class="iph-icon">🗂</div><div class="iph-lbl"><strong>4개 업무 축 인포그래픽</strong>FGI / 품질관리 / 접근성 / 자체기술검증</div></div>
+            <div class="eov"><span class="eov-txt">+ 이미지 추가</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai">
+        <div class="bl">My Role ① — 1차 FGI (2024.05 / 검정 심사 전)</div>
+        <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px">전국 6개 지역 현직 초등교사 157명 (영어 77 / 수학 80). 지역별 소그룹 면접 전국 순회. 5개 영역 × 내용/기능 2개 측면으로 설계.</p>
+        <div style="overflow-x:auto;margin-bottom:20px">
+          <table class="dt">
+            <thead><tr><th>발견</th><th>데이터</th><th>원인 분석</th></tr></thead>
+            <tbody>
+              <tr><td>수업 화면 적절성 최하위</td><td>긍정응답률 59.9% (영어 42%)</td><td>태블릿PC 비율 33.8%인데 최적화 미흡</td></tr>
+              <tr><td>모니터링 기능 인지 실패</td><td>사용 편의성 긍정응답률 32.4% (전체 최하위)</td><td>기능이 다른 탭에 숨어있어 존재 자체를 모름</td></tr>
+              <tr><td>학생 간 상호작용 부재</td><td>긍정응답률 29.4% (수학 23.8%)</td><td>영어는 협업 활동 존재, 수학은 전무</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pg">
+          <div>
+            <div class="img-slot" data-image-id="aidt-fgi" data-image-label="FGI 체크리스트 실제 문서 — 영역 구조 보이는 페이지">
+              <div class="iph"><div class="iph-icon">📋</div><div class="iph-lbl"><strong>FGI 체크리스트 문서</strong>내용/기능 영역 분리 구조</div></div>
+              <div class="eov"><span class="eov-txt">+ 이미지 추가</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="img-slot" data-image-id="aidt-proposal" data-image-label="개선 제안서 실제 문서 캡처 — 메뉴명 변경 또는 수업안 재구성 개선안">
+              <div class="iph"><div class="iph-icon">📄</div><div class="iph-lbl"><strong>개선 제안서 문서</strong>수업안 재구성 개선안 페이지</div></div>
+              <div class="eov"><span class="eov-txt">+ 이미지 추가</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="cb ai">
+        <div class="bl">데이터 → 설계안 → 개발사 전달</div>
+        <h4>예시 1 — 수업안 재구성 기능 발견성 문제</h4>
+        <p>FGI에서 "기능이 있는지조차 모른다"는 발견 → 아이콘을 [수업안 만들기] 텍스트 버튼으로 변경, 저장 조건 설계, 복사·검색·공유 기능 3종 추가 설계까지 전달.</p>
+        <h4>예시 2 — 수학 학생-학생 상호작용 부재</h4>
+        <p>긍정응답률 23.8%, 디지털교과서 가이드라인 필수 요소 미충족 → 곱셈 빙고, 분수 국기 활동 등 모둠 활동 6종의 규칙·진행 방식·디지털 구현 형태까지 직접 설계해 전달.</p>
+      </div>
+
+      <div class="cb ai">
+        <div class="bl">My Role ② — 2차 FGI (2025.05 / 운영 단계)</div>
+        <p style="color:var(--muted);font-size:.9rem;margin-bottom:14px">초·중학교 교사 72명. 1차와 의도적으로 다르게 설계한 두 가지:</p>
+        <div style="overflow-x:auto">
+          <table class="dt">
+            <thead><tr><th>변경 사항</th><th>이유</th></tr></thead>
+            <tbody>
+              <tr><td>평가 영역 5 → 6개, 50개+ 문항 확대</td><td>1차에서 "수업 이후 과정"·"학생 관점" 데이터 부족</td></tr>
+              <tr><td>"기능 제안" 항목을 별도 컬럼 분리</td><td>1차 정성 의견 미분류로 재분류에 과도한 시간 소요</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="cb ai">
+        <div class="bl">My Role ③④ — 품질관리 체계 설계 + 자체기술검증</div>
+        <h4>서비스 품질관리 체계 (10-3장) 직접 설계</h4>
+        <p>시스템 가용률 99.5% 이상, 평균 응답속도 3초 이내, 콘텐츠 오류율 0.1% 이하, 사용자 피드백 반영률 80% 이상. 이슈 등급 분류(Critical/Major/Minor), 조직·역할 분장, 피드백 수렴 체계까지 포함.</p>
+        <h4>자체기술검증결과서 전체 관리 (30개+ 항목)</h4>
+        <p>복수 개발사가 작성한 초안을 전 항목에 걸쳐 검토·수정·보완. 회사마다 다른 작성 방식을 심사위원이 일관된 기준으로 평가할 수 있도록 서술 구조와 증빙 형식 통일.</p>
+      </div>
+
+      <div class="rc ai">
+        <div class="bl">Result</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px">
+          <div class="stat-box"><div class="stat-n">229명</div><div class="stat-l">총 FGI 참여 교사 수</div></div>
+          <div class="stat-box"><div class="stat-n">30+</div><div class="stat-l">검정 심사 항목 관리</div></div>
+          <div class="stat-box"><div class="stat-n">통과</div><div class="stat-l">교육부 검정 심사</div></div>
+        </div>
+      </div>
+
+      <div class="tw-box ai">
+        <div class="tw-label">Takeaway</div>
+        <p>"사용자 리서치는 질문 설계가 전부다." 1차 FGI에서 내용/기능을 분리하지 않았다면, "모니터링 기능이 다른 탭에 숨어있어 존재 자체를 모른다"는 발견은 나오지 않았을 것이다. 개선 제안은 "고쳐주세요"가 아니라 "이렇게, 이 이유로"여야 개발사가 움직인다. <strong>데이터 → 인사이트 → 구체적 설계안 → 개발사 전달</strong>의 기획 사이클을 체득했다.</p>
+      </div>
+      <div class="tags ai">
+        <span class="tag tp">FGI 설계·수행</span><span class="tag tp">정량/정성 분석</span><span class="tag ta">품질관리 체계</span><span class="tag ta">개발사 커뮤니케이션</span><span class="tag tw">교육부 검정</span><span class="tag ts">AI 디지털교과서</span>
+      </div>
+    </div>
+
+    <!-- ────── PROJECT 03 ────── -->
+    <div class="proj ai" id="project-3" style="margin-top:48px">
+      <div class="proj-num">MAIN PROJECT 03</div>
+      <h2 class="proj-title">AI Trend Lab — 사내 AI 트렌드 아카이브 플랫폼</h2>
+      <p class="proj-sub">"구글 시트 한계를 발견하고, 직접 서비스로 만들어 팀 정식 프로젝트로 승격시키다"</p>
+      <div class="proj-meta">
+        <div class="mi"><span class="ml">기간</span><span class="mv">2025.11 ~ 현재</span></div>
+        <div class="mi"><span class="ml">역할</span><span class="mv">기획 + 개발 (1인 프로젝트)</span></div>
+        <div class="mi"><span class="ml">스택</span><span class="mv">Next.js · React · Firebase · Vercel</span></div>
+        <div class="mi"><span class="ml">URL</span><span class="mv"><a href="https://ai-trend-lab.vercel.app/" target="_blank">ai-trend-lab.vercel.app ↗</a></span></div>
+      </div>
+
+      <div class="pg ai">
+        <div>
+          <div class="img-slot" data-image-id="atl-main" data-image-label="AI Trend Lab 메인 화면 캡처 — 대시보드">
+            <div class="iph"><div class="iph-icon">🤖</div><div class="iph-lbl"><strong>AI Trend Lab 메인 화면</strong>대시보드 화면</div></div>
+            <div class="eov"><span class="eov-txt">+ 이미지 추가</span></div>
+          </div>
+        </div>
+        <div class="cb">
+          <div class="bl">Problem</div>
+          <p>팀에서 매일 구글 시트에 AI 뉴스를 수기 기록. 데이터가 쌓일수록 세 가지 문제가 선명해졌다.</p>
+          <p>① <strong>탐색 한계</strong> — 행이 늘어날수록 원하는 정보를 찾기 어려움</p>
+          <p>② <strong>트렌드 파악 불가</strong> — 흐름을 한눈에 볼 수 없음</p>
+          <p>③ <strong>AI 리터러시 편차</strong> — 팀 전체가 기술 흐름을 공유할 구조 없음</p>
+          <div class="tags">
+            <span class="tag tp">바이브코딩</span><span class="tag ta">Next.js · Firebase</span><span class="tag tw">1인 기획+개발</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai">
+        <div class="bl">Solution — 주요 기능 4가지</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:28px">
+          <div class="rc" style="margin-bottom:0">
+            <h4 style="font-size:.92rem;margin-bottom:7px">1. 대시보드</h4>
+            <p style="color:var(--muted);font-size:.84rem;line-height:1.65">분야별(LLM, 이미지, 영상, 오디오, STT, 코딩 등) 주목할 만한 AI 서비스를 한눈에 조망하는 메인 화면.</p>
+          </div>
+          <div class="rc" style="margin-bottom:0">
+            <h4 style="font-size:.92rem;margin-bottom:7px">2. AI 뉴스 아카이브 (~150건)</h4>
+            <p style="color:var(--muted);font-size:.84rem;line-height:1.65">URL 입력 → Gemini API 자동 구조화 (제목·날짜·한줄 요약·핵심 내용 3가지·인사이트). 유의어 처리: "지피티" 검색 시 "GPT" 결과도 노출.</p>
+          </div>
+          <div class="rc" style="margin-bottom:0">
+            <h4 style="font-size:.92rem;margin-bottom:7px">3. 순위 리포트</h4>
+            <p style="color:var(--muted);font-size:.84rem;line-height:1.65">평가 기준 직접 수립 + 보고서 자동화. 보고서가 쌓일수록 모델별 순위 변화를 선 그래프로 추적 — 단발성 보고서를 살아있는 트렌드 데이터로 확장.</p>
+          </div>
+          <div class="rc" style="margin-bottom:0">
+            <h4 style="font-size:.92rem;margin-bottom:7px">4. 뉴스 리포트</h4>
+            <p style="color:var(--muted);font-size:.84rem;line-height:1.65">주간/월간 단위 AI 뉴스 분석 리포트 정기 발행. Claude 확장 프로그램으로 뉴스 추가 자동화 파이프라인 구현 중.</p>
+          </div>
+        </div>
+        <div class="pg">
+          <div>
+            <div class="img-slot" data-image-id="atl-archive" data-image-label="AI Trend Lab 뉴스 아카이브 화면">
+              <div class="iph"><div class="iph-icon">📰</div><div class="iph-lbl"><strong>뉴스 아카이브 화면</strong>URL → Gemini AI 자동 구조화</div></div>
+              <div class="eov"><span class="eov-txt">+ 이미지 추가</span></div>
+            </div>
+          </div>
+          <div>
+            <div class="img-slot" data-image-id="atl-ranking" data-image-label="순위 리포트 화면 — 선 그래프로 모델별 순위 변화 추적">
+              <div class="iph"><div class="iph-icon">📈</div><div class="iph-lbl"><strong>순위 리포트</strong>모델별 순위 변화 선 그래프</div></div>
+              <div class="eov"><span class="eov-txt">+ 이미지 추가</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ai" style="overflow-x:auto;margin-bottom:28px">
+        <div class="bl">핵심 기획 판단들</div>
+        <table class="dt">
+          <thead><tr><th>상황</th><th>선택</th><th>이유</th></tr></thead>
+          <tbody>
+            <tr><td>자동 크롤링 → 사이트 차단으로 실패</td><td>수동 URL 입력 + AI 자동 구조화</td><td>"사람이 판단하고 AI가 구조화"하는 분업이 품질에 적합</td></tr>
+            <tr><td>월별 보고서가 독립적으로 존재</td><td>누적 시 선 그래프로 순위 변화 자동 추적</td><td>스냅샷이 아닌 시계열 트렌드가 실제 의사결정에 유용</td></tr>
+            <tr><td>단순 키워드 검색</td><td>유의어 처리 설계</td><td>AI 분야는 동일 기술에 한글명·영어명·약어 등 복수 명칭 공존</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="rc ai">
+        <div class="bl">Result</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:16px">
+          <div class="stat-box"><div class="stat-n">팀 정식</div><div class="stat-l">프로젝트 승격</div></div>
+          <div class="stat-box"><div class="stat-n">~30명</div><div class="stat-l">AI Lab 팀원 대상 운영</div></div>
+          <div class="stat-box"><div class="stat-n">150건+</div><div class="stat-l">뉴스 아카이브 축적</div></div>
+        </div>
+        <p style="color:var(--muted);font-size:.88rem;line-height:1.7">전사 확대 배포 준비 중 (오류 수정 및 안정화 단계). 뉴스·순위 리포트 정기 발행 중.</p>
+      </div>
+
+      <div class="tw-box ai">
+        <div class="tw-label">Takeaway</div>
+        <p>바이브코딩(Cursor + Claude + Gemini)으로 Next.js, React, Firebase, Vercel 기반 풀스택 서비스를 기획부터 배포까지 1인으로 완성. DB 설계, API 연동, 배포 파이프라인까지 전 과정을 직접 다루며 <strong>기술적 실현 가능성을 기획 단계에서 함께 판단할 수 있는 시야</strong>를 갖게 됐다. 이 경험이 클래스캔버스 기획에서 개발사 기술 제약을 받았을 때 당황하지 않고 재설계할 수 있었던 배경이다.</p>
+      </div>
+      <div class="tags ai">
+        <span class="tag tp">Next.js · React</span><span class="tag tp">Firebase · Vercel</span><span class="tag ta">Gemini API</span><span class="tag ta">바이브코딩</span><span class="tag tw">1인 풀스택</span><span class="tag ts">팀 정식 프로젝트 승격</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BONUS PROJECT -->
+<section class="sec" style="background:var(--surface)">
+  <div class="wrap">
+    <div class="sh ai">
+      <div class="sb">Bonus Project</div>
+      <h2 class="st">AI 기술 조사 & PoC</h2>
+      <p class="sd">단순 조사가 아닌 테스트 설계 → PoC 수행 → 정량/정성 분석 → 업무 적용 판단 → 보고의 사이클로 사내 AI 도입 의사결정을 지원했습니다.</p>
+    </div>
+    <div class="bonus-g sc">
+      <div class="poc-card">
+        <h4>① AI TTS PoC</h4>
+        <p>ElevenLabs, Gemini TTS 2.5, Supertone, Typecast, 클로바더빙을 YBM 실제 콘텐츠에 직접 적용. 자모 발음, 숫자/기호 읽기, 끊어읽기, 감정 구현 등 <strong>20개 이상의 자체 평가 항목</strong> 수립 + API 요금 체계 분석.</p>
+        <span class="poc-result">→ 사내 AI TTS 도입 검토 근거 마련 / YCC 기획으로 연결</span>
+      </div>
+      <div class="poc-card">
+        <h4>② AI 필기인식 기술 분석</h4>
+        <p>셀바스AI, MyScript, Google, Mathpix 등 <strong>7개 업체</strong> 한국어·영어·베트남어·일본어·수식 인식 성능 비교. GPT로 고난이도 테스트 문장 설계, 정자체/보통/날림체 3단계 수행. Claude 아티팩트로 오류율 비교 분석기 직접 구현.</p>
+        <span class="poc-result">→ 디지털교과서 필기 기능 업체 선정 기초 자료 제공</span>
+      </div>
+      <div class="poc-card">
+        <h4>③ 생성형 AI 도구 종합 분석</h4>
+        <p>LLM(ChatGPT, Gemini, Claude), 이미지 생성(NanoBanana, Firefly, DALL-E 등), 영상 생성(Veo3, Sora, Runway 등), AI 에이전트 빌더 등 전 카테고리 수십 개 도구를 <strong>동일 프롬프트 기반</strong>으로 비교 평가.</p>
+        <span class="poc-result">→ 사내 AI 리터러시 가이드 / YCC 이미지 생성 프로세스 기획으로 이어짐</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills" class="sec">
+  <div class="wrap">
+    <div class="sh ai">
+      <div class="sb">Skills & Tools</div>
+      <h2 class="st">역량과 도구</h2>
+    </div>
+    <div class="skills-g sc">
+      <div class="sk-card">
+        <div class="sk-ttl"><div class="sk-ico" style="background:rgba(124,92,252,.15)">🎯</div>서비스 기획</div>
+        <div class="sk-items">
+          <span class="sk-i">화면 기획서</span><span class="sk-i">유저 플로우</span><span class="sk-i">PRD</span><span class="sk-i">서비스 개선 제안서</span><span class="sk-i">품질관리 체계</span><span class="sk-i">KPI 설계</span><span class="sk-i">제작 가이드</span>
+        </div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-ttl"><div class="sk-ico" style="background:rgba(56,217,245,.1)">🔍</div>사용자 리서치</div>
+        <div class="sk-items">
+          <span class="sk-i">FGI 설계·수행</span><span class="sk-i">설문 설계</span><span class="sk-i">정량/정성 분석</span><span class="sk-i">분석 보고서</span><span class="sk-i">GA 분석</span>
+        </div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-ttl"><div class="sk-ico" style="background:rgba(255,107,107,.1)">🤖</div>AI / 프롬프트</div>
+        <div class="sk-items">
+          <span class="sk-i">프롬프트 엔지니어링</span><span class="sk-i">Conversation Flow</span><span class="sk-i">GPTs 설계</span><span class="sk-i">AI API 기획</span><span class="sk-i">PoC 설계·수행</span>
+        </div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-ttl"><div class="sk-ico" style="background:rgba(52,211,153,.1)">💻</div>개발 (바이브코딩)</div>
+        <div class="sk-items">
+          <span class="sk-i">Next.js</span><span class="sk-i">React</span><span class="sk-i">Firebase</span><span class="sk-i">Vercel</span><span class="sk-i">Gemini API</span><span class="sk-i">Claude API</span>
+        </div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-ttl"><div class="sk-ico" style="background:rgba(124,92,252,.1)">🤝</div>협업</div>
+        <div class="sk-items">
+          <span class="sk-i">외부 개발사 협업</span><span class="sk-i">기획서 버전 관리</span><span class="sk-i">편집팀 교육</span><span class="sk-i">크로스펑셔널 리딩</span>
+        </div>
+      </div>
+      <div class="sk-card">
+        <div class="sk-ttl"><div class="sk-ico" style="background:rgba(56,217,245,.1)">🛠</div>도구</div>
+        <div class="sk-items">
+          <span class="sk-i">Figma</span><span class="sk-i">Notion</span><span class="sk-i">Google Analytics</span><span class="sk-i">Cursor</span><span class="sk-i">GitHub</span><span class="sk-i">Adobe XD</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Numbers -->
+    <div class="sh ai" style="margin-top:64px;margin-bottom:28px">
+      <div class="sb">Key Numbers</div>
+      <h2 class="st">숫자로 본 역량</h2>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px" class="sc">
+      <div class="stat-box"><div class="stat-n">229명</div><div class="stat-l">FGI 참여 교사 (2회 기획·수행)</div></div>
+      <div class="stat-box"><div class="stat-n">1,976건</div><div class="stat-l">교과서 연계 자료 구축</div></div>
+      <div class="stat-box"><div class="stat-n">30+</div><div class="stat-l">AIDT 검정 심사 항목</div></div>
+      <div class="stat-box"><div class="stat-n">87.32%</div><div class="stat-l">신학기 최고 참여율</div></div>
+      <div class="stat-box"><div class="stat-n">20+</div><div class="stat-l">AI TTS 자체 평가 항목</div></div>
+      <div class="stat-box"><div class="stat-n">7개사</div><div class="stat-l">필기인식 기술 비교</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="wrap">
+    <div class="contact-card ai">
+      <div class="sb" style="justify-content:center">Contact</div>
+      <h2 class="st" style="margin-top:10px">함께 만들어갈 다음 프로젝트가 있으신가요?</h2>
+      <p style="color:var(--muted);margin-top:14px;line-height:1.75;font-size:.97rem">사용자 데이터에서 출발해 실제 서비스로 만드는 기획자를 찾고 계신다면, 언제든 연락 주세요.</p>
+      <div class="c-links">
+        <a href="mailto:ybm.ailab@gmail.com" class="btn btn-p">ybm.ailab@gmail.com</a>
+        <a href="https://ai-trend-lab.vercel.app/" target="_blank" class="btn btn-o">AI Trend Lab ↗</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 강유진 · AI 서비스 기획자 포트폴리오</div>
+</footer>
+
+<!-- FAB -->
+<div class="fab">
+  <div class="fab-tip" id="fab-tip">이미지 편집 모드 ON</div>
+  <div class="fab-btn" id="fab-btn" title="이미지 편집 모드 토글">✏️</div>
+</div>
+
+<!-- IMAGE MODAL -->
+<div class="mo" id="mo">
+  <div class="mo-box">
+    <h3>이미지 추가</h3>
+    <p class="mo-lbl" id="mo-lbl">이미지 슬롯 설명</p>
+    <input type="text" id="mo-url" placeholder="https://... (이미지 URL 또는 Figma 내보내기 링크)" />
+    <p class="mo-note">💡 Figma에서 이미지 내보내기 후 URL을 붙여넣거나, 로컬 파일 경로(file://...)를 입력하세요.<br>저장하면 브라우저 localStorage에 유지됩니다.</p>
+    <div class="mo-acts">
+      <button class="btn btn-o" id="mo-del" style="padding:8px 16px;font-size:.82rem;color:var(--warm);border-color:rgba(255,107,107,.3)">삭제</button>
+      <button class="btn btn-o" id="mo-cancel" style="padding:8px 16px;font-size:.82rem">취소</button>
+      <button class="btn btn-p" id="mo-ok" style="padding:8px 16px;font-size:.82rem">추가</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Navbar
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => nav.classList.toggle('on', scrollY > 36), {passive:true});
+
+  // Scroll animations
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('v'); obs.unobserve(e.target); }});
+  }, {threshold: .08, rootMargin:'0px 0px -50px 0px'});
+  document.querySelectorAll('.ai,.sc').forEach(el => obs.observe(el));
+
+  // Counter
+  const cobs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if(!e.isIntersecting) return;
+      const el = e.target, target = +el.dataset.count, dur = 1400, s = Date.now();
+      const tick = () => {
+        const p = Math.min((Date.now()-s)/dur,1), ep = 1-Math.pow(1-p,3);
+        el.textContent = Math.round(ep*target).toLocaleString();
+        if(p<1) requestAnimationFrame(tick);
+      };
+      tick(); cobs.unobserve(el);
+    });
+  }, {threshold:.5});
+  document.querySelectorAll('[data-count]').forEach(el => cobs.observe(el));
+
+  // Image edit system
+  let editMode = false, curSlot = null;
+  const saved = JSON.parse(localStorage.getItem('pf-imgs') || '{}');
+  const fabBtn = document.getElementById('fab-btn');
+  const fabTip = document.getElementById('fab-tip');
+  const modal = document.getElementById('mo');
+  const moLbl = document.getElementById('mo-lbl');
+  const moUrl = document.getElementById('mo-url');
+  const moOk = document.getElementById('mo-ok');
+  const moCancel = document.getElementById('mo-cancel');
+  const moDel = document.getElementById('mo-del');
+
+  function setImg(slot, url) {
+    if(!url) {
+      slot.innerHTML = `<div class="iph"><div class="iph-icon">${slot._icon||'🖼'}</div><div class="iph-lbl"><strong>${slot._title||''}</strong>${slot._desc||''}</div></div><div class="eov"><span class="eov-txt">${editMode?'✏️ 이미지 변경':'+ 이미지 추가'}</span></div>`;
+    } else {
+      slot.innerHTML = `<img src="${url}" alt="${slot.dataset.imageLabel||''}" /><div class="eov"><span class="eov-txt">✏️ 이미지 변경</span></div>`;
+    }
+  }
+
+  function initSlots() {
+    document.querySelectorAll('.img-slot').forEach(slot => {
+      const ph = slot.querySelector('.iph');
+      slot._icon = ph ? ph.querySelector('.iph-icon')?.textContent : '🖼';
+      slot._title = ph ? ph.querySelector('.iph-lbl strong')?.textContent : '';
+      slot._desc = ph ? ph.querySelector('.iph-lbl')?.innerHTML.replace(/<strong>.*?<\/strong>/,'') : '';
+      const id = slot.dataset.imageId;
+      if(saved[id]) setImg(slot, saved[id]);
+    });
+  }
+  initSlots();
+
+  function toggleEdit() {
+    editMode = !editMode;
+    fabBtn.classList.toggle('on', editMode);
+    fabBtn.textContent = editMode ? '✅' : '✏️';
+    fabTip.style.display = editMode ? 'block' : 'none';
+    document.querySelectorAll('.img-slot').forEach(slot => {
+      slot.classList.toggle('em', editMode);
+      slot.onclick = editMode ? () => openModal(slot) : null;
+    });
+  }
+  fabBtn.addEventListener('click', toggleEdit);
+
+  function openModal(slot) {
+    curSlot = slot;
+    moLbl.textContent = slot.dataset.imageLabel || '';
+    moUrl.value = saved[slot.dataset.imageId] || '';
+    modal.classList.add('open');
+    moUrl.focus();
+  }
+  function closeModal() { modal.classList.remove('open'); curSlot = null; }
+
+  moCancel.addEventListener('click', closeModal);
+  modal.addEventListener('click', e => { if(e.target===modal) closeModal(); });
+  moUrl.addEventListener('keydown', e => { if(e.key==='Enter') moOk.click(); if(e.key==='Escape') closeModal(); });
+
+  moOk.addEventListener('click', () => {
+    const url = moUrl.value.trim();
+    if(!url || !curSlot) return;
+    const id = curSlot.dataset.imageId;
+    saved[id] = url;
+    localStorage.setItem('pf-imgs', JSON.stringify(saved));
+    setImg(curSlot, url);
+    closeModal();
+  });
+
+  moDel.addEventListener('click', () => {
+    if(!curSlot) return;
+    const id = curSlot.dataset.imageId;
+    delete saved[id];
+    localStorage.setItem('pf-imgs', JSON.stringify(saved));
+    setImg(curSlot, null);
+    closeModal();
+  });
+</script>
+</body>
+</html>

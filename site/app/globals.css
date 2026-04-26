@@ -1,0 +1,187 @@
+@import "tailwindcss";
+
+/* ─── Pretendard Variable Font ─── */
+@font-face {
+  font-family: 'Pretendard';
+  src: url('/PretendardVariable.ttf') format('truetype');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ─── Light mode (default) ─── */
+:root {
+  --bg:            #F8FAFF;
+  --surface:       #FFFFFF;
+  --surface-2:     #F1F5FB;
+  --surface-3:     #E4ECF8;
+  --border:        rgba(0,0,0,0.07);
+  --border-2:      rgba(0,0,0,0.13);
+  --tx:            #0D1117;
+  --tx-2:          #4B5563;
+  --tx-3:          #9CA3AF;
+  --accent:        #2563EB;
+  --accent-dim:    rgba(37,99,235,0.09);
+  --accent-glow:   rgba(37,99,235,0.18);
+  --cyan:          #0284C7;
+  --cyan-dim:      rgba(2,132,199,0.09);
+  --amber:         #D97706;
+  --amber-dim:     rgba(217,119,6,0.09);
+  --emerald:       #059669;
+  --emerald-dim:   rgba(5,150,105,0.09);
+  --shadow-xs:     0 1px 3px rgba(0,0,0,0.05);
+  --shadow-sm:     0 2px 8px rgba(0,0,0,0.07);
+  --shadow-md:     0 4px 20px rgba(0,0,0,0.09);
+  --shadow-lg:     0 8px 40px rgba(0,0,0,0.11);
+  --nav-bg:        rgba(248,250,255,0.88);
+  /* Landing scene specific */
+  --landing-bg:    #07090C;
+  --landing-tx:    #EDF2F7;
+  --landing-tx-3:  rgba(237,242,247,0.45);
+}
+
+/* ─── Dark mode ─── */
+[data-theme="dark"] {
+  --bg:            #07090C;
+  --surface:       rgba(255,255,255,0.05);
+  --surface-2:     rgba(255,255,255,0.03);
+  --surface-3:     rgba(255,255,255,0.08);
+  --border:        rgba(255,255,255,0.08);
+  --border-2:      rgba(255,255,255,0.14);
+  --tx:            #EDF2F7;
+  --tx-2:          rgba(237,242,247,0.65);
+  --tx-3:          rgba(237,242,247,0.38);
+  --accent:        #3B82F6;
+  --accent-dim:    rgba(59,130,246,0.14);
+  --accent-glow:   rgba(59,130,246,0.30);
+  --cyan:          #38BDF8;
+  --cyan-dim:      rgba(56,189,248,0.12);
+  --amber:         #FCD34D;
+  --amber-dim:     rgba(252,211,77,0.12);
+  --emerald:       #34D399;
+  --emerald-dim:   rgba(52,211,153,0.12);
+  --shadow-xs:     none;
+  --shadow-sm:     none;
+  --shadow-md:     none;
+  --shadow-lg:     none;
+  --nav-bg:        rgba(7,9,12,0.85);
+  --landing-bg:    #07090C;
+  --landing-tx:    #EDF2F7;
+  --landing-tx-3:  rgba(237,242,247,0.45);
+}
+
+/* ─── Base ─── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--tx);
+  -webkit-font-smoothing: antialiased;
+  font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', '맑은 고딕', sans-serif;
+}
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ─── Glassmorphism (dark mode only meaningful) ─── */
+.glass {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.glass-2 {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+/* ─── Light mode card override ─── */
+:root .glass {
+  background: #FFFFFF;
+  border: 1px solid var(--border);
+  backdrop-filter: none;
+  box-shadow: var(--shadow-sm);
+}
+:root .glass-2 {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  backdrop-filter: none;
+}
+
+/* ─── Landing scene (always dark, regardless of theme) ─── */
+.landing-dark {
+  background: var(--landing-bg);
+  color: var(--landing-tx);
+}
+.landing-dark body {
+  background: var(--landing-bg) !important;
+}
+
+/* ─── Button accent ─── */
+.btn-accent {
+  background: linear-gradient(135deg, var(--accent), var(--cyan));
+  color: #fff;
+  border-radius: 9999px;
+  font-weight: 700;
+  transition: box-shadow 0.25s, transform 0.25s;
+  border: none;
+}
+.btn-accent:hover {
+  box-shadow: 0 8px 32px var(--accent-glow);
+  transform: translateY(-2px);
+}
+
+/* ─── Animations ─── */
+@keyframes letter-reveal {
+  0%   { opacity: 0; transform: translateY(20px); filter: blur(10px); }
+  100% { opacity: 1; transform: translateY(0);    filter: blur(0);    }
+}
+@keyframes fade-up {
+  0%   { opacity: 0; transform: translateY(14px); }
+  100% { opacity: 1; transform: translateY(0);    }
+}
+@keyframes panel-rise {
+  0%   { opacity: 0; transform: translateY(28px); }
+  100% { opacity: 1; transform: translateY(0);    }
+}
+@keyframes keyword-pop {
+  0%   { opacity: 0; transform: scale(0.80) translateY(12px); }
+  70%  {              transform: scale(1.04) translateY(-2px); }
+  100% { opacity: 1; transform: scale(1)    translateY(0);    }
+}
+@keyframes chat-bubble-in {
+  0%   { opacity: 0; transform: translateY(28px) scale(0.94); }
+  100% { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+@keyframes slide-out-up {
+  0%   { opacity: 1; transform: translateY(0);    }
+  100% { opacity: 0; transform: translateY(-100px); }
+}
+@keyframes hub-rise {
+  0%   { opacity: 0; transform: translateY(60px) scale(0.97); }
+  100% { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+@keyframes console-slide-in {
+  0%   { opacity: 0; transform: translateY(40px); }
+  100% { opacity: 1; transform: translateY(0);    }
+}
+@keyframes card-pop {
+  0%   { opacity: 0; transform: translateY(32px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+.motion-letter   { display: inline-block; opacity: 0; animation: letter-reveal 700ms cubic-bezier(0.19,1,0.22,1) forwards; }
+.stage-fade      { opacity:0; animation: fade-up          720ms ease                           forwards; }
+.keyword-pop     { opacity:0; animation: keyword-pop      480ms cubic-bezier(0.34,1.56,0.64,1) forwards; }
+.chat-bubble-in  { opacity:0; animation: chat-bubble-in   620ms cubic-bezier(0.19,1,0.22,1)    forwards; }
+.slide-out-up    {            animation: slide-out-up     600ms cubic-bezier(0.4,0,0.2,1)      forwards; }
+.hub-rise        {            animation: hub-rise         700ms cubic-bezier(0.19,1,0.22,1)    both;     }
+.console-enter   {            animation: console-slide-in 650ms cubic-bezier(0.19,1,0.22,1)    both;     }
+.card-pop        { opacity:0; animation: card-pop         550ms cubic-bezier(0.34,1.2,0.64,1)  forwards; }
+.panel-rise      { opacity:0; animation: panel-rise       720ms cubic-bezier(0.19,1,0.22,1)    forwards; }

@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir \"C:\\\\Users\\\\krhd1\\\\Desktop\\\\vibecoding\\\\portfolio\")",
+      "Bash(start \"\" \"http://localhost:3000\")"
+    ]
+  }
+}

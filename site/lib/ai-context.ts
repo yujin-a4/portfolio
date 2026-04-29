@@ -131,7 +131,6 @@ export function buildPortfolioItemContext(itemId?: string | null) {
 - 요약: ${item.summary}
 - 핵심 내용:
 ${item.highlights.map((highlight) => `  - ${highlight}`).join('\n')}
-${item.stats?.length ? `- 주요 수치:\n${item.stats.map((stat) => `  - ${stat.value}: ${stat.label}`).join('\n')}` : ''}
 - 태그: ${item.tags.join(', ')}
 
 질문이 모호하면 이 항목을 중심으로 답변하세요.`

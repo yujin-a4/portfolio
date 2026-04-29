@@ -10,10 +10,12 @@ export interface ProjectSection {
   id: string
   title?: string
   content?: string
+  highlight?: string
   bullets?: string[]
   table?: TableData
-  imageSlot?: { id: string; description: string; aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1' }
-  stats?: { value: string; label: string }[]
+  imageSlot?: { id: string; description: string; aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1'; src?: string; badge?: string }
+  images?: { id: string; description: string; aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1'; src?: string; badge?: string }[]
+  sideLayout?: boolean
   subsections?: ProjectSection[]
 }
 
@@ -30,7 +32,7 @@ export const richProjects: RichProjectData[] = [
   // ─────────────────────────────────────────
   {
     projectId: 'project-classcanvas',
-    tagline: '교과서 연계 쌍방향 수업 자료 1,976건을 직접 설계해 플랫폼 활용률을 끌어올리다',
+    tagline: '교과서 연계 쌍방향 수업 자료 **1,976건**을 직접 설계해 **플랫폼 활용률**을 끌어올리다',
     overview: {
       headers: ['항목', '내용'],
       rows: [
@@ -42,14 +44,6 @@ export const richProjects: RichProjectData[] = [
     },
     sections: [
       {
-        id: 'cc-hero-image',
-        imageSlot: {
-          id: 'classcanvas-main',
-          description: '클래스캔버스 서비스 화면 — 내 보관함 + YBM 자료 가져오기 모달 팝업',
-          aspectRatio: '16/9',
-        },
-      },
-      {
         id: 'cc-problem',
         title: 'Problem — 기능은 있었다. 콘텐츠가 없었다.',
         content:
@@ -58,11 +52,14 @@ export const richProjects: RichProjectData[] = [
           {
             id: 'cc-data',
             title: 'Y클라우드 사용 행태 데이터 분석 (활성 사용자 16,278명)',
-            stats: [
-              { value: '78%', label: '교과서 자료 조회 중 영어 과목 비중' },
-              { value: '87.4%', label: '초등 영어 교사 교과서 자료 사용률' },
-              { value: '89.4%', label: '고등 영어 교사 교과서 자료 사용률' },
-            ],
+            table: {
+              headers: ['지표', '수치', '의미'],
+              rows: [
+                ['교과서 자료 조회 중 영어 비중', '78%', '영어 편중 → 다과목 자료 확장 전략 수립 근거'],
+                ['초등 영어 교사 사용률', '87.4%', '교과서 연계 자료의 실제 수요 확인'],
+                ['고등 영어 교사 사용률', '89.4%', '교과서 연계 자료의 실제 수요 확인'],
+              ],
+            },
           },
           {
             id: 'cc-fgi-insight',
@@ -78,11 +75,6 @@ export const richProjects: RichProjectData[] = [
       {
         id: 'cc-role',
         title: 'My Role — 무엇을 기획했는가',
-        imageSlot: {
-          id: 'classcanvas-spec-cover',
-          description: '화면 기획서 v1.0~v2.3 버전 목차 캡처',
-          aspectRatio: '4/3',
-        },
         subsections: [
           {
             id: 'cc-role-1',
@@ -92,11 +84,6 @@ export const richProjects: RichProjectData[] = [
               '기술 제약 반영: 과목 수가 DB 업데이트에 따라 유동적 → 고정 탭 대신 스와이프·이동 버튼으로 대응',
               '완료 토스트 알럿 → 섬네일 크기 조정 불가 확인 후 스크롤 영역·반응형 재설계 (w1920~w1024)',
             ],
-            imageSlot: {
-              id: 'classcanvas-flow',
-              description: 'YBM 자료 가져오기 화면 기획서 — 학교급/과목/단원 필터링 구조',
-              aspectRatio: '4/3',
-            },
           },
           {
             id: 'cc-role-2',
@@ -122,11 +109,25 @@ export const richProjects: RichProjectData[] = [
               '편집창 메뉴 재설계: 퀴즈 템플릿·YBM 자료·갤러리 접근성 향상, 저장 버튼·QR 공유 추가',
               '폴더 생성·이동·삭제 기능 설계 (최대 12개 폴더, 반응형 팝업 w1920~w1024)',
             ],
-            imageSlot: {
-              id: 'classcanvas-editor',
-              description: '편집창 메뉴 개선 또는 폴더 시스템 기획서 캡처',
-              aspectRatio: '4/3',
-            },
+          },
+          {
+            id: 'cc-spec-images',
+            images: [
+              {
+                id: 'classcanvas-flow',
+                description: 'YBM 자료 가져오기 유저 플로우',
+                aspectRatio: '4/3',
+                src: '/images/classcanvas/classcanvas1.png',
+                badge: '화면 기획서',
+              },
+              {
+                id: 'classcanvas-editor',
+                description: '편집창 UX 및 폴더 시스템',
+                aspectRatio: '4/3',
+                src: '/images/classcanvas/classcanvas2.png',
+                badge: '화면 기획서',
+              },
+            ],
           },
           {
             id: 'cc-role-4',
@@ -140,26 +141,18 @@ export const richProjects: RichProjectData[] = [
         id: 'cc-result',
         title: 'Result — GA 지표 (2025.10 ~ 2026.03, 개편 후 6개월)',
         table: {
-          headers: ['월', '활성 사용자', '참여율', '평균 참여 시간'],
+          headers: ['지표', '수치', '맥락'],
           rows: [
-            ['10월 (개편 직후)', '170명', '80.39%', '4분 17초'],
-            ['11월', '132명', '80.08%', '1분 49초'],
-            ['12월', '190명', '78.24%', '3분 13초'],
-            ['1월 (방학)', '137명', '78.21%', '6분 47초 ★'],
-            ['2월', '175명', '81.83%', '5분 59초'],
-            ['3월 (신학기)', '296명 ★', '87.32% ★', '2분 27초'],
+            ['신학기 최고 참여율', '87.32% (3월)', 'Google Analytics 양호 기준 63% 대비 우수'],
+            ['활성 사용자 증가', '+74% (10월→3월)', '별도 마케팅 없이 서비스 가치만으로 달성'],
+            ['6개월 연속 참여율', '78%+ 유지', '일회성 유입이 아닌 반복 사용 구조가 작동함을 증명'],
           ],
         },
-        stats: [
-          { value: '87.32%', label: '신학기 최고 참여율 (3월)' },
-          { value: '+74%', label: '10월 대비 3월 활성 사용자 증가' },
-          { value: '6개월 연속 78%+', label: '참여율 유지 (Google 기준 양호: 63%)' },
+        bullets: [
+          '6개월 연속 참여율 78% 이상 — Google Analytics 양호 기준(63%)을 단 한 달도 밑돌지 않음. 일회성 유입이 아닌 반복 사용 구조가 작동함을 증명.',
+          '방학(1월) 딥유즈 확인 — 활성 사용자가 137명으로 줄었지만 평균 참여 시간 6분 47초로 연중 최고치. 수업 준비를 미리 하는 코어 유저층이 존재한다는 검증.',
+          '신학기(3월) 최고치 달성 — 별도 마케팅 없이 서비스 가치만으로 참여율 87.32%, 활성 사용자 296명(10월 대비 +74%).',
         ],
-        imageSlot: {
-          id: 'classcanvas-ga-chart',
-          description: 'GA 참여율 추이 그래프 — 6개월 라인 차트',
-          aspectRatio: '16/9',
-        },
       },
       {
         id: 'cc-takeaway',
@@ -175,7 +168,7 @@ export const richProjects: RichProjectData[] = [
   // ─────────────────────────────────────────
   {
     projectId: 'project-aidt',
-    tagline: '229명 교사의 목소리를 데이터로 정리하고, 설계안으로 만들어 개발사에 전달하다',
+    tagline: '**229명** 교사의 목소리를 데이터로 정리하고, **설계안**으로 만들어 개발사에 전달하다',
     overview: {
       headers: ['항목', '내용'],
       rows: [
@@ -183,7 +176,7 @@ export const richProjects: RichProjectData[] = [
         ['소속', 'YBM AI Lab'],
         ['역할', 'FGI 설계·수행·분석, 품질관리 체계 설계, 개선안 기획 및 개발사 커뮤니케이션'],
         ['제품', 'AI 디지털교과서 — LKT 기반 학습진단, AI 보조교사, AI 튜터, 음성인식 탑재 클라우드 교육 플랫폼'],
-        ['규모', '초·중·고 영어·수학 전 과목 / 검정 심사 30개+ 항목'],
+        ['규모', '초·중·고 영어·수학 전 과목 / 보조출원사 다수 / 검정 심사 30개+ 항목'],
       ],
     },
     sections: [
@@ -258,12 +251,15 @@ export const richProjects: RichProjectData[] = [
             id: 'aidt-quality',
             title: '③ 서비스 품질관리 체계 직접 설계 (10-3장)',
             content: '검정 심사 30개 항목 중 품질관리 영역을 처음부터 직접 작성. 핵심 판단: 시스템 품질관리와 콘텐츠 품질관리를 구분.',
-            stats: [
-              { value: '99.5%+', label: '시스템 가용률 기준' },
-              { value: '3초 이내', label: '평균 응답속도 기준' },
-              { value: '0.1% 이하', label: '콘텐츠 오류율 기준' },
-              { value: '80%+', label: '사용자 피드백 반영률 기준' },
-            ],
+            table: {
+              headers: ['품질 영역', '지표', '기준'],
+              rows: [
+                ['시스템', '가용률', '99.5% 이상'],
+                ['시스템', '평균 응답속도', '3초 이내'],
+                ['콘텐츠', '오류율', '0.1% 이하'],
+                ['운영', '사용자 피드백 반영률', '80% 이상'],
+              ],
+            },
           },
           {
             id: 'aidt-verify',
@@ -278,15 +274,10 @@ export const richProjects: RichProjectData[] = [
       {
         id: 'aidt-result',
         title: 'Result',
-        stats: [
-          { value: '229명', label: 'FGI 참여 교사 (1차 157 + 2차 72)' },
-          { value: '30+', label: '검정 심사 항목 관리' },
-          { value: '통과', label: '교육부 검정 심사 기여' },
-        ],
         bullets: [
-          'AI 디지털교과서 교육부 검정 심사 통과에 기여',
-          '품질관리 체계 처음부터 설계 → 운영 가능 수준 구축',
-          '데이터 기반 개선 제안서 작성 및 개발사 전달',
+          'AI 디지털교과서 교육부 검정 심사 통과 기여 — FGI 157명(1차) + 72명(2차) = 229명 데이터 기반',
+          '품질관리 체계(10-3장) 처음부터 직접 설계 → 운영 가능 수준 구축',
+          '모든 개선 제안서에 우선순위 분류([요청]/[검토])를 붙여 개발사 커뮤니케이션 효율화',
         ],
       },
       {
@@ -303,7 +294,7 @@ export const richProjects: RichProjectData[] = [
   // ─────────────────────────────────────────
   {
     projectId: 'project-ai-trend-lab',
-    tagline: '구글 시트 한계를 발견하고, 직접 서비스로 만들어 팀 정식 프로젝트로 승격시키다',
+    tagline: '구글 시트 한계를 발견하고, 직접 **서비스로 만들어** 팀 **정식 프로젝트**로 승격시키다',
     overview: {
       headers: ['항목', '내용'],
       rows: [
@@ -351,7 +342,7 @@ export const richProjects: RichProjectData[] = [
             id: 'atl-f2',
             title: '② AI 뉴스 아카이브 (현재 약 150건 축적)',
             content:
-              'URL을 입력하면 Gemini API가 자동으로 제목·날짜·한줄 요약·핵심 내용 3가지·인사이트로 구조화. 유의어 처리 설계로 "지피티" 검색 시 "GPT" 결과도 함께 노출.',
+              'URL을 입력하면 Gemini API가 자동으로 제목·날짜·한줄 요약·핵심 내용 3가지·인사이트로 구조화. 현재 Claude 확장 프로그램을 활용해 뉴스 추가 자동화 파이프라인도 구현 중이다. 유의어 처리 설계로 "지피티" 검색 시 "GPT" 결과도 함께 노출.',
             bullets: [
               '뉴스를 아는 사용자: URL 입력란에 바로 붙여넣기',
               '뉴스 출처를 모르는 사용자: 하단 분류별 뉴스 사이트 목록 탐색',
@@ -390,15 +381,10 @@ export const richProjects: RichProjectData[] = [
       {
         id: 'atl-result',
         title: 'Result',
-        stats: [
-          { value: '1인', label: '기획·개발·배포 전 과정' },
-          { value: '150건+', label: 'AI 뉴스 아카이브 축적' },
-          { value: '30명', label: 'AI Lab 팀원 대상 안정적 운영' },
-        ],
         bullets: [
-          '자발적 기획·개발 → 팀 정식 프로젝트로 승격',
-          '전사 확대 배포 준비 중 (오류 수정 및 안정화 단계)',
-          '뉴스·순위 리포트 정기 발행 체계 구축',
+          '1인 기획·개발·배포 — Next.js + Firebase + Vercel 풀스택 서비스를 혼자 완성',
+          '150건+ AI 뉴스 아카이브 축적, AI Lab 팀원 30명 대상 안정적 운영',
+          '자발적 사이드 프로젝트 → 팀 정식 프로젝트 승격 → 전사 확대 배포 준비 중',
         ],
       },
       {
@@ -406,6 +392,130 @@ export const richProjects: RichProjectData[] = [
         title: '개발 과정에서 배운 것',
         content:
           '바이브코딩(Cursor + Claude + Gemini)으로 Next.js, React, Firebase, Vercel 기반의 풀스택 서비스를 기획부터 배포까지 1인으로 완성했다. DB 설계, API 연동, 배포 파이프라인까지 전 과정을 직접 다루며, 기술적 실현 가능성을 기획 단계에서 함께 판단할 수 있는 시야를 갖게 됐다.',
+      },
+    ],
+  },
+
+  // ─────────────────────────────────────────
+  // ACTIVITY: Dakon 긴급 인수인계 해커톤
+  // ─────────────────────────────────────────
+  {
+    projectId: 'activity-dakon-hackathon',
+    tagline: '비개발자, 혼자서 기획 — 그것만으로 **2위**를 만든 **서비스 기획** 기록',
+    overview: {
+      headers: ['항목', '내용'],
+      rows: [
+        ['일시', '2026.03.05 ~ 2026.04.13 (결과 발표: 2026.04.24)'],
+        ['주최', 'Dakon'],
+        ['팀명', 'M.I.O'],
+        ['팀원', '강유진, 조정연 (2인)'],
+        ['역할', '서비스 기획 전 과정 · 바이브코딩으로 실제 페이지 구현 · 뒷단 로직 설계'],
+        ['결과', '2등 수상'],
+      ],
+    },
+    sections: [
+      {
+        id: 'hackathon-problem',
+        title: 'Step 1. 문제 정의 — "해커톤 경험이 깨지는 순간은 어디인가"',
+        content:
+          '해커톤 참가자는 아이디어를 구현하러 왔지만, 실제로는 팀 모집·협업·제출을 각각 다른 플랫폼에서 해결해야 한다. 흩어진 도구가 집중을 깨뜨린다. 이 문제를 체계적으로 파악하기 위해 가장 먼저 UX 여정 지도를 그렸다.',
+        subsections: [
+          {
+            id: 'hackathon-pain-points',
+            title: '여정 분석으로 도출한 핵심 고통 지점',
+            sideLayout: true,
+            imageSlot: {
+              id: 'maxer-ux-journey',
+              description: 'UX 여정 지도 — 참가자의 감정 곡선과 고통 지점 시각화',
+              aspectRatio: '4/3',
+              src: '/images/activity/maxer-p6.png',
+              badge: 'UX Journey Map',
+            },
+            table: {
+              headers: ['단계', '고통 지점', '원인', '기획 방향'],
+              rows: [
+                ['팀 모집', '매칭 실패 & 미스매치', '스킬·역할 정보 없이 텍스트 자기소개만으로 판단', '점수 기반 매칭 엔진'],
+                ['협업', '진행 상황 공유 불가', '카카오톡·노션·구글독스 분산 사용', '팀 전용 올인원 베이스캠프'],
+                ['제출', '제출 직전 혼선', '마감 기준·제출 방식 파악에 시간 소모', '단일 제출허브로 통합'],
+              ],
+            },
+          },
+        ],
+      },
+      {
+        id: 'hackathon-solution',
+        title: 'Step 2. 솔루션 설계 — MAXER 서비스 개요',
+        content:
+          '세 가지 고통 지점에 1:1 대응하는 기능을 설계했다. "해커톤의 시작부터 협업, 제출까지 끊기지 않는 경험"이 핵심 가치다.',
+        table: {
+          headers: ['기능', '해결하는 문제', '핵심 설계'],
+          rows: [
+            ['스마트 팀 매칭', '스킬·역할 미스매치', 'GitHub·기술스택·역할·이전 이력 정량화 → 점수 매트릭스'],
+            ['올인원 베이스캠프', '협업 도구 분산', '작전실·제출허브·게시판 3탭 단일 워크스페이스'],
+            ['단일 제출허브', '마감 혼선', '결과물 링크·파일·발표자료 중앙 관리 및 체계적 제출 흐름'],
+          ],
+        },
+      },
+      {
+        id: 'hackathon-features',
+        title: 'Step 3. 기능 상세 설계',
+        subsections: [
+          {
+            id: 'hackathon-matching',
+            title: '① 프로필 기반 점수제 매칭 엔진',
+            sideLayout: true,
+            imageSlot: {
+              id: 'maxer-matching',
+              description: '매칭 알고리즘 점수 체계 — 평가 항목별 가중치와 기준표',
+              aspectRatio: '4/3',
+              src: '/images/activity/maxer-p7.png',
+              badge: '매칭 알고리즘',
+            },
+            bullets: [
+              'GitHub · 기술스택 · 역할 · 이전 해커톤 이력 4개 항목 정량화',
+              '항목별 가중치 설정 후 점수 매트릭스로 최적 팀원 추천',
+              '원하는 역할·스킬 필터만 설정하면 매칭 자동 제안',
+            ],
+          },
+          {
+            id: 'hackathon-basecamp',
+            title: '② 올인원 베이스캠프 — 3탭 구조',
+            content: '팀이 구성된 이후 협업과 제출까지 플랫폼을 이탈하지 않도록 3탭으로 기능을 배분했다.',
+            table: {
+              headers: ['탭', '핵심 기능', '해결하는 문제'],
+              rows: [
+                ['작전실', '팀 소개 · 진행 상황 · 아이디어 노트 · 실시간 투표', '분산된 협업 도구 → 단일 팀 허브로 통합'],
+                ['제출허브', '결과물(링크·파일·발표자료) 중앙 관리 및 제출', '마감 직전 혼선 → 체계적 제출 흐름 확보'],
+                ['게시판', '참가자 간 공개 소통 · 영감 공유 · 네트워킹', '해커톤 종료 후 단절 → 지속 성장 루프 설계'],
+              ],
+            },
+          },
+          {
+            id: 'hackathon-ia',
+            title: '③ 서비스 정보 구조 (IA)',
+            sideLayout: true,
+            imageSlot: {
+              id: 'maxer-architecture',
+              description: '서비스 IA — 기능 계층과 사용자 흐름 구조도',
+              aspectRatio: '4/3',
+              src: '/images/activity/maxer-p9.png',
+              badge: 'Information Architecture',
+            },
+            bullets: [
+              '매칭 → 베이스캠프 → 제출 → 포트폴리오 누적의 순환 구조',
+              '기능 간 연결 흐름과 정보 계층을 구조화',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'hackathon-result',
+        title: 'Step 4. 결과 & 회고',
+        highlight: '🏆 2위 수상 — "현실적인 문제 인식과 구체적인 해결 방안"',
+        bullets: [
+          '문제 정의 → UX 여정 분석 → 기능 우선순위 결정 → IA 설계 → 발표 자료 제작까지 기획 전 사이클을 혼자 완성',
+          '기획은 코드가 없어도 제품을 만든다 — 비개발자가 기획만으로 팀을 이끌어 수상한 경험',
+        ],
       },
     ],
   },

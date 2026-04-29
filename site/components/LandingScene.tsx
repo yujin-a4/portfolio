@@ -57,8 +57,8 @@ export default function LandingScene({ onEnter }: { onEnter: () => void }) {
     <section
       className={`relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-5 z-10 ${step === 10 ? 'slide-out-up' : ''}`}
       style={{
-        background: '#07090C',
-        backgroundImage: 'linear-gradient(rgba(255,255,255,0.032) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.032) 1px, transparent 1px)',
+        background: 'var(--landing-bg)',
+        backgroundImage: 'linear-gradient(var(--landing-grid) 1px, transparent 1px), linear-gradient(90deg, var(--landing-grid) 1px, transparent 1px)',
         backgroundSize: '56px 56px',
       }}
     >
@@ -81,7 +81,7 @@ export default function LandingScene({ onEnter }: { onEnter: () => void }) {
         {/* Line 1 — 작은 수식어 */}
         <p
           className={`text-sm font-medium leading-relaxed mb-2 transition-all duration-700 ${step >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}
-          style={{ color: 'rgba(237,242,247,0.40)' }}
+          style={{ color: 'var(--landing-tx-3)' }}
         >
           AI 기술 문해력을 바탕으로
         </p>
@@ -89,7 +89,7 @@ export default function LandingScene({ onEnter }: { onEnter: () => void }) {
         {/* Line 2 — 중간 크기 직책 */}
         <p
           className={`whitespace-nowrap text-[clamp(1rem,2.6vw,1.65rem)] font-bold leading-snug mb-4 transition-all duration-700 delay-75 ${step >= 3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-3'}`}
-          style={{ color: '#EDF2F7' }}
+          style={{ color: 'var(--landing-tx)' }}
         >
           직접 빌드하고 증명하는 서비스 기획자
         </p>
@@ -100,7 +100,7 @@ export default function LandingScene({ onEnter }: { onEnter: () => void }) {
           style={{ letterSpacing: '-0.02em' }}
         >
           <span style={{ color: '#2563EB', textShadow: '0 0 48px rgba(37,99,235,0.50)' }}>강유진</span>
-          <span style={{ color: '#EDF2F7' }}>입니다.</span>
+          <span style={{ color: 'var(--landing-tx)' }}>입니다.</span>
         </h1>
 
         {/* Chat container */}
@@ -108,12 +108,12 @@ export default function LandingScene({ onEnter }: { onEnter: () => void }) {
           <div className="chat-bubble-in mx-auto w-full text-left">
             <div
               className="rounded-2xl overflow-hidden"
-              style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.10)' }}
+              style={{ background: 'var(--surface)', border: '1px solid var(--border)' }}
             >
               {/* Chat header */}
               <div
                 className="flex items-center gap-2 px-4 py-3"
-                style={{ borderBottom: '1px solid rgba(255,255,255,0.10)', background: 'rgba(255,255,255,0.04)' }}
+                style={{ borderBottom: '1px solid var(--border)', background: 'var(--surface-2)' }}
               >
                 <div className="flex gap-1.5">
                   {['rgba(255,255,255,0.15)', 'rgba(255,255,255,0.15)', 'rgba(255,255,255,0.15)'].map((c, i) => (
@@ -147,12 +147,12 @@ export default function LandingScene({ onEnter }: { onEnter: () => void }) {
                         <div
                           key={kw.title}
                           className="keyword-pop flex items-center gap-3 rounded-xl px-3.5 py-3"
-                          style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.10)', animationDelay: '0ms' }}
+                          style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', animationDelay: '0ms' }}
                         >
                           <span className="text-xl shrink-0">{kw.icon}</span>
                           <div>
-                            <p className="text-sm font-bold leading-tight" style={{ color: '#EDF2F7' }}>{kw.title}</p>
-                            <p className="text-xs mt-0.5" style={{ color: 'rgba(237,242,247,0.40)' }}>{kw.desc}</p>
+                            <p className="text-sm font-bold leading-tight" style={{ color: 'var(--landing-tx)' }}>{kw.title}</p>
+                            <p className="text-xs mt-0.5" style={{ color: 'var(--landing-tx-3)' }}>{kw.desc}</p>
                           </div>
                           <div className="ml-auto w-2 h-2 rounded-full shrink-0" style={{ background: '#2563EB' }} />
                         </div>

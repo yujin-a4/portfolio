@@ -26,24 +26,37 @@ const CHAT_STARTERS: Record<PortfolioCategoryId, string[]> = {
 }
 
 /* ── CategoryTabs ── */
-function CategoryTabs({ activeId, onSelect }: { activeId: PortfolioCategoryId; onSelect: (id: PortfolioCategoryId) => void }) {
+function CategoryTabs({ activeId, onSelect, onBack }: { activeId: PortfolioCategoryId; onSelect: (id: PortfolioCategoryId) => void; onBack?: () => void }) {
   return (
-    <div className="flex items-center gap-0.5 px-4 shrink-0 glass" style={{ borderBottom: '1px solid var(--border)' }}>
-      {portfolioCategories.map((cat) => {
-        const isActive = activeId === cat.id
-        return (
-          <button key={cat.id} type="button" onClick={() => onSelect(cat.id)}
-            className="relative flex items-center gap-1.5 px-4 py-3.5 text-sm font-semibold transition-colors"
-            style={{ color: isActive ? 'var(--accent)' : 'var(--tx-3)' }}
+    <div className="flex items-center shrink-0" style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
+      {onBack && (
+        <div className="flex items-center pl-4 shrink-0">
+          <button type="button" onClick={onBack}
+            className="flex items-center gap-1.5 text-xs font-semibold py-4 pr-4 transition-colors hover:opacity-60"
+            style={{ color: 'var(--tx-3)' }}
           >
-            {cat.label}
-            {cat.id === 'projects' && (
-              <span className="rounded-full px-1.5 py-0.5 text-[0.58rem] font-black" style={{ background: 'var(--accent-dim)', color: 'var(--accent)' }}>MAIN</span>
-            )}
-            {isActive && <span className="absolute bottom-0 left-0 right-0 h-[2.5px] rounded-t-full" style={{ background: 'var(--accent)' }} />}
+            ← 메뉴로
           </button>
-        )
-      })}
+          <span className="w-px h-4 shrink-0" style={{ background: 'var(--border-2)' }} />
+        </div>
+      )}
+      <div className="flex flex-1 justify-center items-center">
+        {portfolioCategories.map((cat) => {
+          const isActive = activeId === cat.id
+          return (
+            <button key={cat.id} type="button" onClick={() => onSelect(cat.id)}
+              className="relative flex items-center gap-1.5 px-4 py-4 text-sm font-semibold transition-colors"
+              style={{ color: isActive ? 'var(--accent)' : 'var(--tx-3)' }}
+            >
+              {cat.label}
+              {cat.id === 'projects' && (
+                <span className="rounded-full px-1.5 py-0.5 text-[0.55rem] font-black" style={{ background: 'var(--accent-dim)', color: 'var(--accent)' }}>MAIN</span>
+              )}
+              {isActive && <span className="absolute bottom-0 left-3 right-3 h-[2px] rounded-full" style={{ background: 'var(--accent)' }} />}
+            </button>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -51,21 +64,23 @@ function CategoryTabs({ activeId, onSelect }: { activeId: PortfolioCategoryId; o
 /* ── ItemList ── */
 function ItemList({ items, activeItemId, onSelect }: { items: PortfolioMenuItem[]; activeItemId: string; onSelect: (item: PortfolioMenuItem) => void }) {
   return (
-    <nav className="flex flex-col gap-1.5 overflow-y-auto p-3">
+    <nav className="flex flex-col gap-2 overflow-y-auto p-3">
       {items.map((item) => {
         const isActive = activeItemId === item.id
         return (
           <button key={item.id} type="button" onClick={() => onSelect(item)}
-            className="w-full rounded-xl p-3.5 text-left transition-all duration-200"
+            className="w-full rounded-xl p-4 text-left transition-all duration-200"
             style={{
-              background: isActive ? 'var(--accent-dim)' : 'var(--surface-2)',
-              border: `1px solid ${isActive ? 'var(--accent)' : 'var(--border)'}`,
-              backdropFilter: 'blur(8px)',
+              background: isActive ? 'rgba(37,99,235,0.06)' : 'var(--surface)',
+              border: `1px solid ${isActive ? 'rgba(37,99,235,0.22)' : 'var(--border)'}`,
+              boxShadow: isActive ? 'none' : 'var(--shadow-xs)',
+              borderLeft: isActive ? '3px solid var(--accent)' : '3px solid transparent',
             }}
           >
-            <span className="block text-[0.62rem] font-bold uppercase tracking-wide mb-1" style={{ color: 'var(--amber)' }}>{item.eyebrow}</span>
+            <span className="block text-[0.6rem] font-bold uppercase tracking-widest mb-1.5"
+              style={{ color: isActive ? 'var(--accent)' : 'var(--tx-3)' }}>{item.eyebrow}</span>
             <span className="block text-sm font-bold leading-snug" style={{ color: 'var(--tx)' }}>{item.title}</span>
-            <span className="block text-xs mt-1.5" style={{ color: 'var(--tx-3)' }}>{item.period}</span>
+            <span className="block text-[0.72rem] mt-1.5 font-medium" style={{ color: 'var(--tx-3)' }}>{item.period}</span>
           </button>
         )
       })}
@@ -74,64 +89,71 @@ function ItemList({ items, activeItemId, onSelect }: { items: PortfolioMenuItem[
 }
 
 /* ── DetailPanel ── */
-function DetailPanel({ item, onAsk }: { item: PortfolioMenuItem; onAsk: (prompt: string) => void }) {
+function DetailPanel({ item }: { item: PortfolioMenuItem }) {
+  const useGrid = item.highlights.length >= 4
   return (
     <section className="min-h-0 overflow-y-auto">
-      <div className="px-6 py-5 sticky top-0 z-10 glass" style={{ borderBottom: '1px solid var(--border)' }}>
-        <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
-          <div>
-            <p className="text-[0.68rem] font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--amber)' }}>{item.eyebrow}</p>
-            <h2 className="text-2xl font-black leading-tight" style={{ color: 'var(--tx)' }}>{item.title}</h2>
-            <p className="mt-1.5 text-sm font-semibold" style={{ color: 'var(--cyan)' }}>{item.period}</p>
-          </div>
-          <button type="button" onClick={() => onAsk(item.prompt)}
-            className="shrink-0 rounded-xl px-4 py-2.5 text-sm font-bold transition-all hover:scale-105"
-            style={{ background: 'var(--accent-dim)', border: '1px solid var(--accent)', color: 'var(--accent)' }}
-          >
-            AI 답변으로 보기 →
-          </button>
+      {/* Header */}
+      <div className="px-7 pt-7 pb-5 sticky top-0 z-10"
+        style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
+        <p className="text-[0.62rem] font-bold uppercase tracking-widest mb-2"
+          style={{ color: 'var(--accent)' }}>{item.eyebrow}</p>
+        <div className="flex items-start justify-between gap-4">
+          <h2 className="text-xl font-black leading-tight" style={{ color: 'var(--tx)' }}>{item.title}</h2>
+          <span className="shrink-0 text-[0.72rem] font-semibold px-2.5 py-1 rounded-full mt-0.5"
+            style={{ background: 'var(--surface-2)', color: 'var(--tx-3)', border: '1px solid var(--border)' }}>
+            {item.period}
+          </span>
         </div>
-        <p className="mt-4 text-sm leading-relaxed" style={{ color: 'var(--tx-2)' }}>{item.summary}</p>
       </div>
 
-      <div className="p-6 space-y-5">
-        {item.stats?.length ? (
-          <div className={`grid gap-3 ${item.stats.length === 2 ? 'grid-cols-2' : 'sm:grid-cols-3'}`}>
-            {item.stats.map((s) => (
-              <div key={s.label} className="rounded-xl p-4 glass-2">
-                <p className="text-2xl font-black" style={{ color: 'var(--accent)' }}>{s.value}</p>
-                <p className="mt-1 text-xs leading-relaxed" style={{ color: 'var(--tx-3)' }}>{s.label}</p>
-              </div>
-            ))}
-          </div>
-        ) : null}
+      <div className="px-7 py-6 space-y-6">
+        {/* Summary */}
+        <p className="text-sm leading-relaxed font-medium" style={{ color: 'var(--tx-2)' }}>{item.summary}</p>
 
+        {/* Highlights */}
         <div>
-          <p className="text-[0.68rem] font-bold uppercase tracking-wider mb-2" style={{ color: 'var(--tx-3)' }}>주요 내용</p>
-          <div className="space-y-2">
-            {item.highlights.map((h) => (
-              <div key={h} className="flex items-start gap-2.5 rounded-xl px-4 py-3 text-sm leading-relaxed glass-2">
-                <span className="mt-0.5 shrink-0 font-black" style={{ color: 'var(--accent)' }}>›</span>
-                <span style={{ color: 'var(--tx-2)' }}>{h}</span>
-              </div>
+          <p className="text-[0.6rem] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--tx-3)' }}>
+            주요 내용
+          </p>
+          <div className={useGrid ? 'grid grid-cols-2 gap-2.5' : 'flex flex-col gap-2.5'}>
+            {item.highlights.map((h, i) => {
+              const isLastOdd = useGrid && item.highlights.length % 2 !== 0 && i === item.highlights.length - 1
+              return (
+                <div key={i}
+                  className={`rounded-xl p-4 flex flex-col gap-2${isLastOdd ? ' col-span-2' : ''}`}
+                  style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', borderTop: '2px solid rgba(37,99,235,0.18)' }}>
+                  <span className="text-base font-black leading-none tabular-nums"
+                    style={{ color: 'rgba(37,99,235,0.25)', letterSpacing: '-0.02em' }}>
+                    {String(i + 1).padStart(2, '0')}
+                  </span>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--tx-2)' }}>{h}</p>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Tags */}
+        <div>
+          <p className="text-[0.6rem] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--tx-3)' }}>키워드</p>
+          <div className="flex flex-wrap gap-1.5">
+            {item.tags.map((tag) => (
+              <span key={tag} className="rounded-lg px-3 py-1.5 text-xs font-semibold"
+                style={{ background: 'var(--surface-2)', color: 'var(--tx-2)', border: '1px solid var(--border)' }}>
+                {tag}
+              </span>
             ))}
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2">
-          {item.tags.map((tag) => (
-            <span key={tag} className="rounded-lg px-2.5 py-1.5 text-xs font-medium glass-2" style={{ color: 'var(--tx-3)' }}>{tag}</span>
-          ))}
-        </div>
-
-        {item.link ? (
+        {item.link && (
           <a href={item.link.href} target="_blank" rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-bold transition-all hover:scale-105 glass-2"
-            style={{ color: 'var(--accent)' }}
-          >
+            className="inline-flex items-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold transition-all hover:opacity-80"
+            style={{ background: 'var(--accent-dim)', color: 'var(--accent)', border: '1px solid rgba(37,99,235,0.15)' }}>
             {item.link.label} ↗
           </a>
-        ) : null}
+        )}
       </div>
     </section>
   )
@@ -155,13 +177,14 @@ function ChatPanel({ messages, input, streaming, activeCategoryId, onInputChange
   useEffect(() => { endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }) }, [messages])
 
   return (
-    <aside className={`flex min-h-0 flex-col rounded-2xl overflow-hidden glass ${className}`}>
-      <div className="px-4 py-3 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
-        <div className="flex items-center gap-2">
+    <aside className={`flex min-h-0 flex-col rounded-2xl overflow-hidden ${className}`}
+      style={{ background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
+      <div className="px-5 py-4 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
+        <div className="flex items-center gap-2 mb-0.5">
           <div className="w-1.5 h-1.5 rounded-full animate-pulse" style={{ background: 'var(--accent)' }} />
-          <p className="text-xs font-bold uppercase tracking-wider" style={{ color: 'var(--accent)' }}>AI Interview</p>
+          <p className="text-[0.6rem] font-bold uppercase tracking-widest" style={{ color: 'var(--accent)' }}>AI Interview</p>
         </div>
-        <p className="mt-0.5 text-sm font-bold" style={{ color: 'var(--tx)' }}>자유 질문</p>
+        <p className="text-sm font-bold" style={{ color: 'var(--tx)' }}>자유롭게 질문하세요</p>
       </div>
 
       <div className="flex-1 space-y-3 overflow-y-auto p-4">
@@ -179,7 +202,7 @@ function ChatPanel({ messages, input, streaming, activeCategoryId, onInputChange
                     const isBullet = /^[-•·]\s/.test(line)
                     return (
                       <span key={j} className={`block ${isBullet ? 'flex gap-1.5 items-start' : ''}`}>
-                        {isBullet && <span className="shrink-0 mt-0.5" style={{ color: 'var(--accent)' }}>›</span>}
+                        {isBullet && <span className="shrink-0 mt-0.5" style={{ color: msg.role === 'user' ? 'rgba(255,255,255,0.7)' : 'var(--accent)' }}>›</span>}
                         <span>{renderInline(isBullet ? line.replace(/^[-•·]\s/, '') : line)}</span>
                       </span>
                     )
@@ -199,11 +222,13 @@ function ChatPanel({ messages, input, streaming, activeCategoryId, onInputChange
       </div>
 
       <div className="p-3 shrink-0 space-y-2" style={{ borderTop: '1px solid var(--border)' }}>
-        <div className="space-y-1.5">
+        <div className="space-y-1">
           {starters.map((prompt) => (
             <button key={prompt} type="button" onClick={() => onSend(prompt)} disabled={streaming}
-              className="w-full rounded-xl px-3 py-2 text-left text-xs leading-snug transition-all hover:scale-[1.01] disabled:opacity-40 glass-2"
-              style={{ color: 'var(--tx-3)' }}
+              className="w-full rounded-xl px-3 py-2.5 text-left text-xs leading-relaxed transition-colors disabled:opacity-40"
+              style={{ background: 'var(--surface-2)', color: 'var(--tx-3)', border: '1px solid var(--border)' }}
+              onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(37,99,235,0.25)')}
+              onMouseLeave={e => (e.currentTarget.style.borderColor = 'var(--border)')}
             >
               {prompt}
             </button>
@@ -212,14 +237,14 @@ function ChatPanel({ messages, input, streaming, activeCategoryId, onInputChange
         <div className="flex gap-2">
           <input value={input} onChange={(e) => onInputChange(e.target.value)}
             onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); onSend() } }}
-            disabled={streaming} placeholder="자유롭게 질문하세요"
-            className="min-w-0 flex-1 rounded-xl px-3 py-2.5 text-sm outline-none transition-all disabled:opacity-50 glass-2"
-            style={{ color: 'var(--tx)', caretColor: 'var(--accent)' }}
-            onFocus={(e) => (e.currentTarget.style.borderColor = 'var(--accent)')}
-            onBlur={(e) => (e.currentTarget.style.borderColor = '')}
+            disabled={streaming} placeholder="질문을 입력하세요"
+            className="min-w-0 flex-1 rounded-xl px-3.5 py-2.5 text-sm outline-none transition-all disabled:opacity-50"
+            style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', color: 'var(--tx)', caretColor: 'var(--accent)' }}
+            onFocus={(e) => (e.currentTarget.style.borderColor = 'rgba(37,99,235,0.4)')}
+            onBlur={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}
           />
           <button type="button" onClick={() => onSend()} disabled={streaming || !input.trim()}
-            className="rounded-xl px-4 text-sm font-bold transition-all hover:scale-105 disabled:cursor-not-allowed disabled:opacity-40"
+            className="rounded-xl px-4 text-sm font-bold transition-all hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-40"
             style={{ background: 'var(--accent)', color: '#fff' }}
           >
             전송
@@ -238,27 +263,11 @@ function ConsoleScene({ messages, input, streaming, activeCategoryId, activeItem
 }) {
   const activeCategory = getCategoryById(activeCategoryId)
   const isCerts = activeCategoryId === 'certs'
-  const isProject = activeCategoryId === 'projects'
-  const RICH_PROJECT_IDS = ['project-classcanvas', 'project-aidt', 'project-ai-trend-lab']
+  const RICH_DETAIL_IDS = ['project-classcanvas', 'project-aidt', 'project-ai-trend-lab', 'activity-dakon-hackathon']
 
   return (
     <section id="console" className="console-enter h-screen flex flex-col pt-16 overflow-hidden">
-      <CategoryTabs activeId={activeCategoryId} onSelect={onCategorySelect} />
-
-      {/* Breadcrumb + back */}
-      <div className="flex items-center gap-3 px-5 py-2.5 shrink-0" style={{ borderBottom: '1px solid var(--border)' }}>
-        <button type="button" onClick={onBackToHub}
-          className="flex items-center gap-1.5 text-xs font-semibold transition-opacity hover:opacity-70"
-          style={{ color: 'var(--tx-3)' }}
-        >
-          ← 메뉴로
-        </button>
-        <span style={{ color: 'var(--border-2)' }}>·</span>
-        <p className="text-xs" style={{ color: 'var(--tx-3)' }}>
-          <span className="font-semibold" style={{ color: 'var(--tx-2)' }}>{activeCategory.label}</span>
-          {' — '}{activeCategory.description}
-        </p>
-      </div>
+      <CategoryTabs activeId={activeCategoryId} onSelect={onCategorySelect} onBack={onBackToHub} />
 
       {/* Main grid — flex-1 min-h-0 ensures it fills remaining height without overflow */}
       <div className="flex-1 min-h-0 p-4 md:p-5 overflow-hidden">
@@ -266,13 +275,15 @@ function ConsoleScene({ messages, input, streaming, activeCategoryId, activeItem
           className={`h-full grid gap-4 ${isCerts ? 'lg:grid-cols-[1fr_300px]' : 'lg:grid-cols-[220px_minmax(0,1fr)_300px]'}`}
         >
           {!isCerts && (
-            <div className="hidden lg:flex flex-col h-full overflow-hidden rounded-2xl glass">
+            <div className="hidden lg:flex flex-col h-full overflow-hidden rounded-2xl"
+              style={{ background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
               <ItemList items={activeCategory.items} activeItemId={activeItem.id} onSelect={onItemSelect} />
             </div>
           )}
 
           {/* Center — only this column scrolls */}
-          <div className="h-full overflow-y-auto rounded-2xl glass">
+          <div className="h-full overflow-y-auto rounded-2xl"
+            style={{ background: 'var(--surface)', border: '1px solid var(--border)', boxShadow: 'var(--shadow-sm)' }}>
             {isCerts ? (
               <CertificateGrid />
             ) : (
@@ -280,28 +291,27 @@ function ConsoleScene({ messages, input, streaming, activeCategoryId, activeItem
                 <div className="lg:hidden p-3" style={{ borderBottom: '1px solid var(--border)' }}>
                   <select value={activeItem.id}
                     onChange={(e) => { const f = activeCategory.items.find((i) => i.id === e.target.value); if (f) onItemSelect(f) }}
-                    className="w-full rounded-xl px-3 py-2 text-sm outline-none glass-2" style={{ color: 'var(--tx)' }}
+                    className="w-full rounded-xl px-3 py-2 text-sm outline-none"
+                    style={{ background: 'var(--surface-2)', border: '1px solid var(--border)', color: 'var(--tx)' }}
                   >
                     {activeCategory.items.map((item) => <option key={item.id} value={item.id}>{item.title}</option>)}
                   </select>
                 </div>
 
-                {isProject && RICH_PROJECT_IDS.includes(activeItem.id) ? (
+                {RICH_DETAIL_IDS.includes(activeItem.id) ? (
                   <div className="overflow-y-auto h-full">
-                    <div className="px-6 py-5 flex flex-col gap-4 md:flex-row md:items-start md:justify-between glass sticky top-0 z-10" style={{ borderBottom: '1px solid var(--border)' }}>
+                    <div className="px-7 py-6 flex items-start justify-between gap-4 sticky top-0 z-10"
+                      style={{ background: 'var(--surface)', borderBottom: '1px solid var(--border)' }}>
                       <div>
-                        <p className="text-[0.68rem] font-bold uppercase tracking-wide mb-2" style={{ color: 'var(--amber)' }}>{activeItem.eyebrow}</p>
-                        <h2 className="text-2xl font-black leading-tight" style={{ color: 'var(--tx)' }}>{activeItem.title}</h2>
-                        <p className="mt-1.5 text-sm font-semibold" style={{ color: 'var(--cyan)' }}>{activeItem.period}</p>
+                        <p className="text-[0.62rem] font-bold uppercase tracking-widest mb-2.5" style={{ color: 'var(--accent)' }}>{activeItem.eyebrow}</p>
+                        <h2 className="text-xl font-black leading-tight" style={{ color: 'var(--tx)' }}>{activeItem.title}</h2>
                       </div>
-                      <div className="flex gap-2 shrink-0 flex-wrap">
-                        <button type="button" onClick={() => onSend(activeItem.prompt)}
-                          className="rounded-xl px-4 py-2.5 text-sm font-bold transition-all hover:scale-105"
-                          style={{ background: 'var(--accent-dim)', border: '1px solid var(--accent)', color: 'var(--accent)' }}
-                        >AI 답변으로 보기 →</button>
+                      <div className="flex flex-col items-end gap-2 shrink-0">
+                        <span className="text-[0.72rem] font-semibold px-2.5 py-1 rounded-full"
+                          style={{ background: 'var(--surface-2)', color: 'var(--tx-3)', border: '1px solid var(--border)' }}>{activeItem.period}</span>
                         {activeItem.link && (
                           <a href={activeItem.link.href} target="_blank" rel="noopener noreferrer"
-                            className="rounded-xl px-4 py-2.5 text-sm font-bold transition-all hover:scale-105"
+                            className="rounded-xl px-4 py-2 text-sm font-bold transition-all hover:scale-105"
                             style={{ background: 'var(--cyan-dim)', border: '1px solid var(--cyan)', color: 'var(--cyan)' }}
                           >{activeItem.link.label} ↗</a>
                         )}
@@ -310,7 +320,7 @@ function ConsoleScene({ messages, input, streaming, activeCategoryId, activeItem
                     <RichProjectDetail projectId={activeItem.id} />
                   </div>
                 ) : (
-                  <DetailPanel item={activeItem} onAsk={onSend} />
+                  <DetailPanel item={activeItem} />
                 )}
               </>
             )}

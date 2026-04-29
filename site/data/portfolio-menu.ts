@@ -8,7 +8,6 @@ export interface PortfolioMenuItem {
   period: string
   summary: string
   highlights: string[]
-  stats?: { value: string; label: string }[]
   tags: string[]
   link?: { label: string; href: string }
   prompt: string
@@ -37,11 +36,6 @@ const careerItems: PortfolioMenuItem[] = [
       'AI Trend Lab을 1인 기획/개발해 팀 정식 프로젝트로 승격',
       'AI TTS, 필기인식, 생성형 AI 도구 등 사내 PoC와 기술 검증 수행',
     ],
-    stats: [
-      { value: '87.32%', label: '클래스캔버스 최고 참여율' },
-      { value: '229명', label: 'FGI 참여 교사' },
-      { value: '1인', label: 'AI Trend Lab 기획/개발' },
-    ],
     tags: ['AI 서비스 기획', '에듀테크', 'AX', 'Tech PM'],
     prompt: 'YBM AI Lab에서 맡은 역할과 성과를 면접 답변처럼 설명해 주세요.',
   },
@@ -62,7 +56,6 @@ const educationItems: PortfolioMenuItem[] = [
       '석사 논문: 한국어 학습자의 비음과 파열음 인지 연구',
       '사용자 언어 데이터를 관찰하고 해석하는 연구 기반 형성',
     ],
-    stats: [{ value: '4.21/4.3', label: '석사 GPA' }],
     tags: ['언어 데이터', '연구 설계', '한국어 교육'],
     prompt: '연세대학교 대학원 연구 경험이 서비스 기획에 어떤 강점이 되는지 설명해 주세요.',
   },
@@ -79,7 +72,6 @@ const educationItems: PortfolioMenuItem[] = [
       '부전공: 독어독문학과',
       'GPA 3.96 / 4.5',
     ],
-    stats: [{ value: '3.96/4.5', label: '학사 GPA' }],
     tags: ['국어국문학', '독어독문학', '언어 분석'],
     prompt: '학부 전공이 현재 AI 서비스 기획자로서 어떤 기반이 됐는지 설명해 주세요.',
   },
@@ -116,11 +108,6 @@ const projectItems: PortfolioMenuItem[] = [
       '편집팀 교육, 자료 품질 가이드, 화면 기획서 v1.0~v2.3 관리',
       '외부 개발사와 기술 제약을 조율하며 폴더 시스템과 편집창 UX 개선',
     ],
-    stats: [
-      { value: '1,976건', label: '교과서 연계 자료 구축' },
-      { value: '87.32%', label: '신학기 최고 참여율' },
-      { value: '+74%', label: '3월 활성 사용자 증가' },
-    ],
     tags: ['서비스 개편', 'GA 분석', '외부 개발사 협업'],
     prompt: '클래스캔버스 개편 프로젝트를 문제, 역할, 결과 중심으로 설명해 주세요.',
   },
@@ -138,11 +125,6 @@ const projectItems: PortfolioMenuItem[] = [
       '아이콘을 텍스트 버튼으로 변경, 수학 모둠 활동 6종 설계 등 구체적 개선안 제안',
       '시스템 가용률, 응답속도, 콘텐츠 오류율 등 품질관리 지표 정의',
     ],
-    stats: [
-      { value: '229명', label: 'FGI 참여 교사' },
-      { value: '30+', label: '검정 심사 항목' },
-      { value: '통과', label: '교육부 검정 심사 기여' },
-    ],
     tags: ['FGI', '품질관리', 'AI 디지털교과서'],
     prompt: 'AI 디지털교과서 프로젝트에서 사용자 리서치와 개선안 설계 과정을 설명해 주세요.',
   },
@@ -156,14 +138,10 @@ const projectItems: PortfolioMenuItem[] = [
       '구글 시트 기반 AI 뉴스 기록의 한계를 발견하고, Next.js와 Firebase, Gemini API로 직접 만든 사내 AI 트렌드 아카이브입니다.',
     highlights: [
       'URL 입력 후 Gemini API로 제목, 요약, 핵심 내용, 인사이트 자동 구조화',
+      'Claude 확장 프로그램 활용 뉴스 추가 자동화 파이프라인 구현 중',
       '한글명, 영어명, 약어가 공존하는 AI 분야 특성을 반영한 유의어 검색 설계',
       '월별 보고서를 누적해 모델별 순위 변화를 선 그래프로 추적',
-      '개인 문제의식에서 출발해 팀 정식 프로젝트로 승격',
-    ],
-    stats: [
-      { value: '1인', label: '기획/개발/배포' },
-      { value: '150건+', label: 'AI 뉴스 아카이브' },
-      { value: '30명', label: 'AI Lab 팀원 대상 운영' },
+      '개인 문제의식에서 출발해 팀 정식 프로젝트로 승격, 전사 확대 배포 준비 중',
     ],
     tags: ['Next.js', 'Firebase', 'Gemini API', '바이브코딩'],
     link: { label: '서비스 보기', href: 'https://ai-trend-lab.vercel.app/' },
@@ -176,23 +154,70 @@ const projectItems: PortfolioMenuItem[] = [
     eyebrow: 'Bonus Project',
     period: '2024.05 ~ 현재',
     summary:
-      'TTS, 필기인식, 생성형 AI 도구를 실제 업무 기준으로 테스트하고 도입 판단 근거를 만들었습니다.',
+      'TTS, 필기인식, 생성형 AI 도구를 실제 업무 기준으로 테스트하고 도입 판단 근거를 만들었습니다. 단순 조사가 아닌 도메인 특화 기준 설계 → PoC 수행 → 정량 분석 → 보고의 사이클로 진행했습니다.',
     highlights: [
-      'ElevenLabs, Gemini TTS 2.5, Supertone, Typecast, 클로바더빙 비교',
-      '자모 발음, 끊어읽기 등 20개 이상 자체 평가 항목 수립',
-      '셀바스AI, MyScript, Google, Mathpix 등 7개 필기인식 업체 성능 비교',
-      'LLM, 이미지, 영상, 에이전트 빌더를 동일 프롬프트로 비교 평가',
+      'ElevenLabs, Gemini TTS 2.5, Supertone, Typecast, 클로바더빙을 YBM 실제 콘텐츠(초등 ELT, 중등·고등 독해/듣기)에 직접 적용해 비교',
+      '자모 발음, 숫자/기호 읽기, 끊어읽기, 감정 구현 등 20개 이상 자체 평가 항목 수립 + API 요금 체계 분석 포함',
+      'GPT로 고난이도 테스트 문장 설계(겹받침·유사 철자·성조·혼합 언어), Claude 아티팩트로 오류율 비교 분석기 직접 구현해 시각화',
+      '셀바스AI, MyScript, 아이텍솔루션, Google, Mathpix 등 7개 업체 비교 (정자체/보통/날림체 3단계, 5개 언어)',
+      'LLM(ChatGPT·Gemini·Claude), 이미지(NanoBanana·Firefly·DALL-E), 영상(Veo3·Sora·Runway), AI 에이전트 빌더(Copilot Studio·Make·OpenAI Agent Builder) 동일 프롬프트 기반 비교',
     ],
-    stats: [
-      { value: '20+', label: 'TTS 평가 항목' },
-      { value: '7개사', label: '필기인식 기술 비교' },
-    ],
-    tags: ['AI PoC', '기술 검증', '벤치마킹'],
+    tags: ['AI PoC', '기술 검증', '벤치마킹', 'Claude 아티팩트'],
     prompt: 'AI 기술 조사와 PoC를 단순 리서치가 아니라 기획 근거로 만든 방식을 설명해 주세요.',
   },
 ]
 
 const activityItems: PortfolioMenuItem[] = [
+  {
+    id: 'activity-dakon-hackathon',
+    categoryId: 'activities',
+    title: '긴급 인수인계 해커톤 — 문서만 남기고 사라졌다',
+    eyebrow: 'Dakon · 2위 수상',
+    period: '2026.03 ~ 2026.04',
+    summary:
+      'Dakon 주최 "긴급 인수인계 해커톤 - 문서만 남기고 사라졌다"에서 팀 M.I.O로 참가해 해커톤 전용 워크스페이스 MAXER를 기획, 2등을 수상했습니다.',
+    highlights: [
+      '팀 M.I.O(2인) 결성 — 기획 전 과정 단독 주도',
+      '사용자 여정 지도 기반으로 "팀 매칭 실패"와 "제출 전 혼선"을 핵심 고통 지점으로 도출',
+      '프로필 기반 점수제 매칭 엔진 설계 (GitHub·기술스택·역할·이전 이력 종합)',
+      '작전실·제출허브·게시판 3탭 구조의 올인원 베이스캠프 UX 설계',
+      '"기획 자체가 제품"임을 증명 — 비개발자 단독 기획으로 2등 수상',
+    ],
+    tags: ['해커톤', '서비스 기획', 'UX', '2위 수상'],
+    prompt: '해커톤에서 MAXER를 기획한 과정과 2등 수상의 의미를 설명해 주세요.',
+  },
+  {
+    id: 'activity-ybm-instructor',
+    categoryId: 'activities',
+    title: 'YBM 사내 AI 툴 강사',
+    eyebrow: 'Internal Lecture',
+    period: '2025.07',
+    summary:
+      'AI 툴 활용 PPT 제작 방법 강의의 사내 강사로 공식 선정되어 실무 적용법을 공유했습니다.',
+    highlights: [
+      'YBM 사내 공식 강사 선정',
+      'AI 툴을 활용한 PPT 제작 방법 강의',
+      'AI 리터러시를 팀과 조직에 전파하는 경험',
+    ],
+    tags: ['사내 강의', 'AI 리터러시', 'PPT 제작'],
+    prompt: 'YBM 사내 강사 경험을 통해 AI 리터러시 확산 역량을 설명해 주세요.',
+  },
+  {
+    id: 'activity-ai-learning',
+    categoryId: 'activities',
+    title: 'AI 실무 교육 & 바이브코딩',
+    eyebrow: 'Learning',
+    period: '2025.08 ~ 2025.12',
+    summary:
+      'KISA 웹테크 밋업데이, 부스트코스 Connect On 수료. AI API·MCP·바이브코딩·업무 자동화를 학습하며 직접 구현하는 역량의 기반을 쌓았습니다.',
+    highlights: [
+      'KISA 웹테크 밋업데이 (2025.08): Cursor AI 기반 서비스 구현 실습, AI API와 MCP 활용 방식 학습',
+      '부스트코스 Connect On (2025.09~12): AI 기반 업무 자동화, 생성형 AI를 활용한 기획서 작성 흐름 학습',
+      'AI Trend Lab 등 직접 구현 프로젝트의 기술·기획 기반으로 연결',
+    ],
+    tags: ['Cursor', 'AI API', 'MCP', '업무 자동화', '바이브코딩'],
+    prompt: 'AI 실무 교육 경험이 직접 구현 역량과 기획에 어떻게 연결됐는지 설명해 주세요.',
+  },
   {
     id: 'activity-time-education',
     categoryId: 'activities',
@@ -224,54 +249,6 @@ const activityItems: PortfolioMenuItem[] = [
     ],
     tags: ['교육 콘텐츠', 'SNS 기획', '한국어 교육', '인턴'],
     prompt: '시원스쿨 인턴 경험에서 배운 교육 콘텐츠 기획 역량을 설명해 주세요.',
-  },
-  {
-    id: 'activity-kisa',
-    categoryId: 'activities',
-    title: 'KISA 웹테크 밋업데이',
-    eyebrow: 'Learning',
-    period: '2025.08',
-    summary:
-      'Cursor AI 바이브코딩 실습과 AI API, MCP 활용 서비스 구현을 경험했습니다.',
-    highlights: [
-      'Cursor AI 기반 서비스 구현 실습',
-      'AI API와 MCP 활용 방식 학습',
-      'AI Trend Lab 등 직접 구현 프로젝트의 기술 기반 확장',
-    ],
-    tags: ['Cursor', 'AI API', 'MCP'],
-    prompt: 'KISA 웹테크 밋업데이 경험이 직접 구현 역량에 어떻게 연결됐는지 설명해 주세요.',
-  },
-  {
-    id: 'activity-boostcourse',
-    categoryId: 'activities',
-    title: '부스트코스 Connect On',
-    eyebrow: 'Learning',
-    period: '2025.09 ~ 2025.12',
-    summary:
-      'AI 기반 업무 자동화와 생성형 AI 기획서 작성 흐름을 학습했습니다.',
-    highlights: [
-      'AI 기반 업무 자동화 학습',
-      '생성형 AI를 활용한 기획서 작성 방식 정리',
-      '업무 생산성과 문서 품질 개선 관점 확장',
-    ],
-    tags: ['업무 자동화', '생성형 AI', '기획서'],
-    prompt: '부스트코스 Connect On에서 배운 내용을 실무에 어떻게 적용할 수 있는지 설명해 주세요.',
-  },
-  {
-    id: 'activity-ybm-instructor',
-    categoryId: 'activities',
-    title: 'YBM 사내 AI 툴 강사',
-    eyebrow: 'Internal Lecture',
-    period: '2025.07',
-    summary:
-      'AI 툴 활용 PPT 제작 방법 강의의 사내 강사로 공식 선정되어 실무 적용법을 공유했습니다.',
-    highlights: [
-      'YBM 사내 공식 강사 선정',
-      'AI 툴을 활용한 PPT 제작 방법 강의',
-      'AI 리터러시를 팀과 조직에 전파하는 경험',
-    ],
-    tags: ['사내 강의', 'AI 리터러시', 'PPT 제작'],
-    prompt: 'YBM 사내 강사 경험을 통해 AI 리터러시 확산 역량을 설명해 주세요.',
   },
   {
     id: 'activity-nikl',

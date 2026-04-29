@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node render-pdf-pages.mjs)",
+      "Bash(node -e \"const p = require\\('./node_modules/pdfjs-dist/package.json'\\); console.log\\(p.version\\)\")",
+      "Bash(where magick *)",
+      "Bash(where convert *)",
+      "Bash(where gswin64c *)",
+      "Bash(where gswin32c *)",
+      "Bash(where pdftoppm *)",
+      "Bash(node -e ' *)",
+      "Bash(npx tsc *)",
+      "Bash(taskkill /PID 34492 /F)",
+      "Bash(Remove-Item -Recurse -Force .next -ErrorAction SilentlyContinue)",
+      "PowerShell(Stop-Process *)"
+    ]
+  }
+}

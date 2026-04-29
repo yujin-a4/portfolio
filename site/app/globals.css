@@ -11,33 +11,34 @@
 
 /* ─── Light mode (default) ─── */
 :root {
-  --bg:            #F8FAFF;
+  --bg:            #F3F5F8;
   --surface:       #FFFFFF;
-  --surface-2:     #F1F5FB;
-  --surface-3:     #E4ECF8;
-  --border:        rgba(0,0,0,0.07);
-  --border-2:      rgba(0,0,0,0.13);
-  --tx:            #0D1117;
+  --surface-2:     #F8FAFB;
+  --surface-3:     #EEF1F6;
+  --border:        rgba(0,0,0,0.08);
+  --border-2:      rgba(0,0,0,0.14);
+  --tx:            #111827;
   --tx-2:          #4B5563;
   --tx-3:          #9CA3AF;
   --accent:        #2563EB;
-  --accent-dim:    rgba(37,99,235,0.09);
-  --accent-glow:   rgba(37,99,235,0.18);
+  --accent-dim:    rgba(37,99,235,0.07);
+  --accent-glow:   rgba(37,99,235,0.16);
   --cyan:          #0284C7;
-  --cyan-dim:      rgba(2,132,199,0.09);
+  --cyan-dim:      rgba(2,132,199,0.08);
   --amber:         #D97706;
-  --amber-dim:     rgba(217,119,6,0.09);
+  --amber-dim:     rgba(217,119,6,0.08);
   --emerald:       #059669;
-  --emerald-dim:   rgba(5,150,105,0.09);
-  --shadow-xs:     0 1px 3px rgba(0,0,0,0.05);
-  --shadow-sm:     0 2px 8px rgba(0,0,0,0.07);
-  --shadow-md:     0 4px 20px rgba(0,0,0,0.09);
-  --shadow-lg:     0 8px 40px rgba(0,0,0,0.11);
-  --nav-bg:        rgba(248,250,255,0.88);
+  --emerald-dim:   rgba(5,150,105,0.08);
+  --shadow-xs:     0 1px 2px rgba(0,0,0,0.05), 0 1px 6px rgba(0,0,0,0.04);
+  --shadow-sm:     0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
+  --shadow-md:     0 4px 12px rgba(0,0,0,0.07), 0 12px 32px rgba(0,0,0,0.06);
+  --shadow-lg:     0 8px 24px rgba(0,0,0,0.09), 0 24px 56px rgba(0,0,0,0.07);
+  --nav-bg:        rgba(243,245,248,0.92);
   /* Landing scene specific */
-  --landing-bg:    #07090C;
-  --landing-tx:    #EDF2F7;
-  --landing-tx-3:  rgba(237,242,247,0.45);
+  --landing-bg:    #FFFFFF;
+  --landing-tx:    #111827;
+  --landing-tx-3:  rgba(17,24,39,0.40);
+  --landing-grid:  rgba(0,0,0,0.05);
 }
 
 /* ─── Dark mode ─── */
@@ -68,6 +69,7 @@
   --landing-bg:    #07090C;
   --landing-tx:    #EDF2F7;
   --landing-tx-3:  rgba(237,242,247,0.45);
+  --landing-grid:  rgba(255,255,255,0.032);
 }
 
 /* ─── Base ─── */
@@ -104,14 +106,15 @@ body {
 /* ─── Light mode card override ─── */
 :root .glass {
   background: #FFFFFF;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(0,0,0,0.07);
   backdrop-filter: none;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06), 0 4px 16px rgba(0,0,0,0.05);
 }
 :root .glass-2 {
   background: var(--surface-2);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(0,0,0,0.07);
   backdrop-filter: none;
+  box-shadow: none;
 }
 
 /* ─── Landing scene (always dark, regardless of theme) ─── */

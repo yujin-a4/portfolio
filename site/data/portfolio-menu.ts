@@ -184,6 +184,7 @@ const activityItems: PortfolioMenuItem[] = [
       '"기획 자체가 제품"임을 증명 — 비개발자 단독 기획으로 2등 수상',
     ],
     tags: ['해커톤', '서비스 기획', 'UX', '2위 수상'],
+    link: { label: '사이트 보기', href: 'https://daker-hackathon-tau.vercel.app/' },
     prompt: '해커톤에서 MAXER를 기획한 과정과 2등 수상의 의미를 설명해 주세요.',
   },
   {

@@ -9,6 +9,7 @@ interface ImagePlaceholderProps {
   className?: string
   src?: string
   badge?: string
+  fillHeight?: boolean
 }
 
 const ratioMap = {
@@ -25,14 +26,16 @@ export default function ImagePlaceholder({
   className = '',
   src,
   badge,
+  fillHeight = false,
 }: ImagePlaceholderProps) {
   const [open, setOpen] = useState(false)
+  const sizeClass = fillHeight ? 'h-full min-h-[220px]' : ratioMap[aspectRatio]
 
   if (src) {
     return (
       <>
         <div
-          className={`relative w-full overflow-hidden rounded-xl ${ratioMap[aspectRatio]} ${className} cursor-zoom-in group`}
+          className={`relative w-full overflow-hidden rounded-xl ${sizeClass} ${className} cursor-zoom-in group`}
           onClick={() => setOpen(true)}
           data-image-slot={id}
         >
@@ -90,7 +93,7 @@ export default function ImagePlaceholder({
 
   return (
     <div
-      className={`relative w-full overflow-hidden rounded-xl ${ratioMap[aspectRatio]} ${className}`}
+      className={`relative w-full overflow-hidden rounded-xl ${sizeClass} ${className}`}
       style={{
         background: 'var(--surface-2)',
         border: '2px dashed var(--border-2)',

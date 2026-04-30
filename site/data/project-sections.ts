@@ -6,15 +6,24 @@ export interface TableData {
   rows: string[][]
 }
 
+export interface FeatureCardData {
+  badge: string
+  title: string
+  bullets?: string[]
+  src?: string
+}
+
 export interface ProjectSection {
   id: string
   title?: string
   content?: string
   highlight?: string
   bullets?: string[]
+  entries?: { label: string; content: string }[]
   table?: TableData
-  imageSlot?: { id: string; description: string; aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1'; src?: string; badge?: string }
+  imageSlot?: { id: string; description: string; aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1'; src?: string; badge?: string; collapsible?: boolean }
   images?: { id: string; description: string; aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1'; src?: string; badge?: string }[]
+  featureCards?: FeatureCardData[]
   sideLayout?: boolean
   subsections?: ProjectSection[]
 }
@@ -22,6 +31,8 @@ export interface ProjectSection {
 export interface RichProjectData {
   projectId: string
   tagline: string
+  subtitle?: string
+  description?: string
   overview: TableData
   sections: ProjectSection[]
 }
@@ -401,16 +412,19 @@ export const richProjects: RichProjectData[] = [
   // ─────────────────────────────────────────
   {
     projectId: 'activity-dakon-hackathon',
-    tagline: '비개발자, 혼자서 기획 — 그것만으로 **2위**를 만든 **서비스 기획** 기록',
+    tagline: '기획자가 **바이브코딩**으로 실제 서비스를 구현해 **2위를 수상**하다',
+    subtitle: '해커톤 참가부터 협업·제출까지 이어지는 올인원 워크스페이스, MAXER',
+    description:
+      'Dakon의 "긴급 인수인계 해커톤 — 문서만 남기고 사라졌다"는 미완성 웹페이지를 제공된 자료를 바탕으로 완성하고, 팀만의 아이디어로 기능과 UX를 확장해 더 나은 서비스 경험을 제안하는 대회였다. 초보 개발자가 어디서부터 구현해야 할지 막막한 상황을 전제로, 바이브코딩을 활용해 자료를 해석하고 실제 웹페이지 형태의 서비스를 완성해야 했다.',
     overview: {
       headers: ['항목', '내용'],
       rows: [
-        ['일시', '2026.03.05 ~ 2026.04.13 (결과 발표: 2026.04.24)'],
         ['주최', 'Dakon'],
-        ['팀명', 'M.I.O'],
-        ['팀원', '강유진, 조정연 (2인)'],
+        ['팀명 · 팀원', 'M.I.O · 강유진, 조정연 (2인)'],
         ['역할', '서비스 기획 전 과정 · 바이브코딩으로 실제 페이지 구현 · 뒷단 로직 설계'],
-        ['결과', '2등 수상'],
+        ['기술 스택', 'Next.js 15 (App Router) · Zustand · Tailwind CSS · Vercel'],
+        ['결과', '2위 수상'],
+        ['개발 노트', 'https://www.notion.so/Daker-744b1f4f640a8390b54301c81dd7b885'],
       ],
     },
     sections: [
@@ -418,25 +432,25 @@ export const richProjects: RichProjectData[] = [
         id: 'hackathon-problem',
         title: 'Step 1. 문제 정의 — "해커톤 경험이 깨지는 순간은 어디인가"',
         content:
-          '해커톤 참가자는 아이디어를 구현하러 왔지만, 실제로는 팀 모집·협업·제출을 각각 다른 플랫폼에서 해결해야 한다. 흩어진 도구가 집중을 깨뜨린다. 이 문제를 체계적으로 파악하기 위해 가장 먼저 UX 여정 지도를 그렸다.',
+          '해커톤 참가자가 실제로 겪는 문제는 아이디어 부족이 아니라 탐색, 팀 구성, 협업, 제출, 사후 정리가 서로 다른 도구로 흩어져 있다는 점이었다. 참가자가 아이디어와 구현에 집중할 수 있도록 페르소나 2명과 UX 여정 지도를 기준으로 끊기는 지점을 먼저 정리했다.',
+        imageSlot: {
+          id: 'maxer-ux-journey',
+          description: 'UX 여정 지도 — 4단계 감정곡선과 고통 지점',
+          aspectRatio: '4/3',
+          src: '/images/activity/maxer-p6.png',
+          badge: 'UX Journey Map',
+          collapsible: true,
+        },
         subsections: [
           {
             id: 'hackathon-pain-points',
-            title: '여정 분석으로 도출한 핵심 고통 지점',
-            sideLayout: true,
-            imageSlot: {
-              id: 'maxer-ux-journey',
-              description: 'UX 여정 지도 — 참가자의 감정 곡선과 고통 지점 시각화',
-              aspectRatio: '4/3',
-              src: '/images/activity/maxer-p6.png',
-              badge: 'UX Journey Map',
-            },
             table: {
-              headers: ['단계', '고통 지점', '원인', '기획 방향'],
+              headers: ['단계', 'Pain Point', '원인', '기획 방향'],
               rows: [
-                ['팀 모집', '매칭 실패 & 미스매치', '스킬·역할 정보 없이 텍스트 자기소개만으로 판단', '점수 기반 매칭 엔진'],
-                ['협업', '진행 상황 공유 불가', '카카오톡·노션·구글독스 분산 사용', '팀 전용 올인원 베이스캠프'],
-                ['제출', '제출 직전 혼선', '마감 기준·제출 방식 파악에 시간 소모', '단일 제출허브로 통합'],
+                ['탐색', '내 수준에 맞는 대회 판단 어려움', '대회 정보가 파편화되고 추천 기준이 없음', '프로필 기반 맞춤 추천'],
+                ['팀 구성', '매칭 실패 & 팀 구성 불안', '외부 오픈채팅 이탈, 스킬 검증 수단 부재', '점수 기반 팀·팀원 매칭'],
+                ['대회 진행', '진행 상황 공유와 제출 관리 부담', '카카오톡·노션·구글독스 분산 사용', '올인원 베이스캠프'],
+                ['결과·성장', '참가 이력 소멸', '수상하지 않으면 경험이 이어지지 않음', '포인트·랭킹·성장 네트워킹 루프'],
               ],
             },
           },
@@ -444,77 +458,75 @@ export const richProjects: RichProjectData[] = [
       },
       {
         id: 'hackathon-solution',
-        title: 'Step 2. 솔루션 설계 — MAXER 서비스 개요',
-        content:
-          '세 가지 고통 지점에 1:1 대응하는 기능을 설계했다. "해커톤의 시작부터 협업, 제출까지 끊기지 않는 경험"이 핵심 가치다.',
-        table: {
-          headers: ['기능', '해결하는 문제', '핵심 설계'],
-          rows: [
-            ['스마트 팀 매칭', '스킬·역할 미스매치', 'GitHub·기술스택·역할·이전 이력 정량화 → 점수 매트릭스'],
-            ['올인원 베이스캠프', '협업 도구 분산', '작전실·제출허브·게시판 3탭 단일 워크스페이스'],
-            ['단일 제출허브', '마감 혼선', '결과물 링크·파일·발표자료 중앙 관리 및 체계적 제출 흐름'],
-          ],
-        },
-      },
-      {
-        id: 'hackathon-features',
-        title: 'Step 3. 기능 상세 설계',
-        subsections: [
+        title: 'Step 2. 솔루션 설계 — MAXER 서비스 기능 상세 설계',
+        featureCards: [
           {
-            id: 'hackathon-matching',
-            title: '① 프로필 기반 점수제 매칭 엔진',
-            sideLayout: true,
-            imageSlot: {
-              id: 'maxer-matching',
-              description: '매칭 알고리즘 점수 체계 — 평가 항목별 가중치와 기준표',
-              aspectRatio: '4/3',
-              src: '/images/activity/maxer-p7.png',
-              badge: '매칭 알고리즘',
-            },
+            badge: '핵심 기능 01',
+            title: '프로필 기반 스코어링 매칭 엔진',
             bullets: [
-              'GitHub · 기술스택 · 역할 · 이전 해커톤 이력 4개 항목 정량화',
-              '항목별 가중치 설정 후 점수 매트릭스로 최적 팀원 추천',
-              '원하는 역할·스킬 필터만 설정하면 매칭 자동 제안',
+              '데이터 소스: 마이페이지 프로필 입력 (주 역할·관심 분야·기술 스택·협업 강점)',
+              '해커톤 추천: 분야 적합성 45pt, 직무 일치 25pt, 기술 스택 20pt — 20점 미만 노출 제외',
+              '팀 매칭: 포지션 직결 50pt, 인접 포지션 28pt, 기술 시너지 30pt',
+              '결과 표시: 매칭 점수, 추천 사유 태그, 팀장용 즉시 초대 기능',
             ],
+            src: '/images/activity/maxer-p7.png',
           },
           {
-            id: 'hackathon-basecamp',
-            title: '② 올인원 베이스캠프 — 3탭 구조',
-            content: '팀이 구성된 이후 협업과 제출까지 플랫폼을 이탈하지 않도록 3탭으로 기능을 배분했다.',
-            table: {
-              headers: ['탭', '핵심 기능', '해결하는 문제'],
-              rows: [
-                ['작전실', '팀 소개 · 진행 상황 · 아이디어 노트 · 실시간 투표', '분산된 협업 도구 → 단일 팀 허브로 통합'],
-                ['제출허브', '결과물(링크·파일·발표자료) 중앙 관리 및 제출', '마감 직전 혼선 → 체계적 제출 흐름 확보'],
-                ['게시판', '참가자 간 공개 소통 · 영감 공유 · 네트워킹', '해커톤 종료 후 단절 → 지속 성장 루프 설계'],
-              ],
-            },
+            badge: '핵심 기능 02',
+            title: '올인원 베이스캠프',
+            bullets: [
+              '정보 탭: 팀 현황, 타임라인, 팀장 전용 관리 센터',
+              '작전실 탭: 진행 상황 추적기, 제출 허브, D-day 카운트다운, 팀 공유 메모',
+              '게시판: 칸반형 아이디어 보드 (아이디어·리소스·할 일)',
+              '최소한의 허브 기능으로 플랫폼 내 핵심 활동 완수 지원',
+            ],
+            src: '/images/activity/maxer-p9.png',
           },
           {
-            id: 'hackathon-ia',
-            title: '③ 서비스 정보 구조 (IA)',
-            sideLayout: true,
-            imageSlot: {
-              id: 'maxer-architecture',
-              description: '서비스 IA — 기능 계층과 사용자 흐름 구조도',
-              aspectRatio: '4/3',
-              src: '/images/activity/maxer-p9.png',
-              badge: 'Information Architecture',
-            },
+            badge: '핵심 기능 03',
+            title: '성장 네트워킹 루프',
             bullets: [
-              '매칭 → 베이스캠프 → 제출 → 포트폴리오 누적의 순환 구조',
-              '기능 간 연결 흐름과 정보 계층을 구조화',
+              '포인트 적립: 팀 만들기·참여 +30pt, 단계별 과제 제출 +100pt, 투표 +5pt',
+              '랭킹 = (참가 횟수 × 50) + (제출 횟수 × 100) + 누적 행동 포인트 + 순위 가점',
+              '설계 의도: 10번 참가 3번 제출한 사람 > 1번 우승한 사람',
+              '루프: 행동 → 포인트 즉시 적립 → 실시간 랭킹 상승 → 새로운 팀 초대 → 재참가',
             ],
+            src: '/images/activity/maxer-p11.png',
           },
         ],
       },
       {
         id: 'hackathon-result',
-        title: 'Step 4. 결과 & 회고',
-        highlight: '🏆 2위 수상 — "현실적인 문제 인식과 구체적인 해결 방안"',
-        bullets: [
-          '문제 정의 → UX 여정 분석 → 기능 우선순위 결정 → IA 설계 → 발표 자료 제작까지 기획 전 사이클을 혼자 완성',
-          '기획은 코드가 없어도 제품을 만든다 — 비개발자가 기획만으로 팀을 이끌어 수상한 경험',
+        title: 'Step 3. 결과 & 회고',
+        highlight: '최종 2위 수상',
+        subsections: [
+          {
+            id: 'hackathon-retro-entries',
+            entries: [
+              {
+                label: '배운 점',
+                content:
+                  '뒷단 로직을 직접 설계하고 구현하는 과정이 서비스 기획자로서 시스템 전체를 입체적으로 이해하는 계기가 됐다. 같은 기능도 사용자의 상태(비로그인, 프로필 미설정, 팀원, 팀장, 대회 Phase)에 따라 화면과 권한이 달라져야 하고, 그 경우의 수를 모두 정의해야 서비스가 끊기지 않는다는 것을 직접 구현하며 체득했다.',
+              },
+              {
+                label: '한계점',
+                content:
+                  '실제 사용자가 어느 지점에서 이탈하는지, 추천 기능이 팀 구성에 도움이 되는지, 베이스캠프가 외부 도구를 대체하는지는 소수의 실사용자라도 직접 테스트해야 나오는 데이터다. 제품의 가치는 기획과 구현이 아니라 실제 사용자의 행동에서 검증된다는 것을 이번 프로젝트가 다시 확인시켜줬다.',
+              },
+            ],
+          },
+          {
+            id: 'hackathon-next-step',
+            title: '다음 고도화 계획',
+            table: {
+              headers: ['단계', '계획'],
+              rows: [
+                ['Step 1', '결과물 제출·현황 관리, 마이페이지 자동 반영, Phase-Aware 리더보드'],
+                ['Step 2', 'AI 일정 어시스턴트, 스마트 리소스 핀, match-ai.ts(Genkit) 활성화로 추천 고도화'],
+                ['Step 3', '팀원 간 상호 리뷰·협업 온도 시스템, 개인별 포트폴리오 공개 URL, 서버 연동'],
+              ],
+            },
+          },
         ],
       },
     ],

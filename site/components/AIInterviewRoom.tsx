@@ -370,6 +370,14 @@ export default function AIInterviewRoom() {
     setActiveItemId(item.id)
   }
 
+  function selectProject(projectId: string) {
+    const item = getPortfolioItemById(projectId)
+    setActiveCategoryId(item.categoryId)
+    setActiveItemId(item.id)
+    setMessages([{ role: 'assistant', content: `${item.title} 프로젝트입니다. 궁금한 점을 질문해 주세요.` }])
+    setStage('console')
+  }
+
   async function send(text?: string) {
     const question = (text ?? input).trim()
     if (!question || streaming) return
@@ -409,7 +417,7 @@ export default function AIInterviewRoom() {
   }
 
   if (stage === 'landing') return <LandingScene onEnter={() => setStage('hub')} />
-  if (stage === 'hub') return <HubScene onSelectCategory={selectCategory} />
+  if (stage === 'hub') return <HubScene onSelectCategory={selectCategory} onSelectProject={selectProject} />
 
   return (
     <ConsoleScene

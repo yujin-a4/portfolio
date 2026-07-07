@@ -1,15 +1,19 @@
 'use client'
 
+// 허브(첫 화면) — 프로젝트 우선 비대칭 구조.
+// 케이스스터디 4개를 커버 질문 + 핵심 숫자로 직접 노출하고,
+// 경력·교육·활동·자격증은 하단 보조 줄로 내린다.
+
 import { useState } from 'react'
 import { portfolioCategories, type PortfolioCategoryId } from '@/data/portfolio-menu'
+import { caseStudies } from '@/data/case-studies'
 
-const CATEGORY_META: Record<PortfolioCategoryId, { icon: string; desc: string; featured?: boolean }> = {
-  career:     { icon: '💼', desc: 'YBM AI Lab 재직 중. AI 서비스 기획부터 직접 개발까지.' },
-  education:  { icon: '🎓', desc: '연세대 교육대학원 석사 · 독일 교환학생.' },
-  projects:   { icon: '🚀', desc: '클래스캔버스 · AI 디지털교과서 · AI Trend Lab.', featured: true },
-  activities: { icon: '⚡', desc: 'KISA 웹테크, 해커톤 2위, AI 강의 등 다채로운 활동.' },
-  certs:      { icon: '🏆', desc: 'AI POT · TOEIC Speaking · 한국어교원 2급.' },
-}
+const SUB_CATEGORIES: { id: PortfolioCategoryId; icon: string; label: string }[] = [
+  { id: 'career', icon: '💼', label: '경력' },
+  { id: 'education', icon: '🎓', label: '교육' },
+  { id: 'activities', icon: '⚡', label: '활동' },
+  { id: 'certs', icon: '🏆', label: '자격증' },
+]
 
 const PROFILE = {
   name: '강유진',
@@ -24,12 +28,40 @@ const PROFILE = {
   skills: ['PM', 'AI/AX 기획', '프롬프트 엔지니어링', 'UX 기획', 'Next.js', 'Figma'],
 }
 
-export default function HubScene({ onSelectCategory }: { onSelectCategory: (id: PortfolioCategoryId) => void }) {
-  const [hovered, setHovered] = useState<PortfolioCategoryId | null>(null)
+/* 형광펜 하이라이트 — 케이스스터디와 동일한 문법 */
+function renderHighlight(text: string) {
+  const parts = text.split(/\*\*(.*?)\*\*/g)
+  return parts.map((part, i) =>
+    i % 2 === 1
+      ? (
+        <mark
+          key={i}
+          style={{
+            background: 'linear-gradient(transparent 62%, var(--accent-glow) 62%)',
+            color: 'inherit',
+            fontWeight: 800,
+            padding: '0 0.08em',
+          }}
+        >
+          {part}
+        </mark>
+      )
+      : <span key={i}>{part}</span>
+  )
+}
+
+export default function HubScene({
+  onSelectCategory,
+  onSelectProject,
+}: {
+  onSelectCategory: (id: PortfolioCategoryId) => void
+  onSelectProject: (projectId: string) => void
+}) {
+  const [hovered, setHovered] = useState<string | null>(null)
 
   return (
     <section className="hub-rise relative min-h-screen px-5 py-20 md:py-28" style={{ background: 'var(--bg)' }}>
-      <div className="mx-auto max-w-4xl space-y-8">
+      <div className="mx-auto max-w-4xl space-y-10">
 
         {/* ── Profile Card ── */}
         <div className="rounded-3xl p-7 md:p-8" style={{ background: 'var(--surface)', boxShadow: 'var(--shadow-md)', border: '1px solid var(--border)' }}>
@@ -104,68 +136,115 @@ export default function HubScene({ onSelectCategory }: { onSelectCategory: (id: 
           </div>
         </div>
 
-        {/* ── Section heading ── */}
-        <div className="text-center pt-2">
-          <p className="text-[0.65rem] font-bold uppercase tracking-widest mb-2" style={{ color: 'var(--accent)' }}>
-            Portfolio
-          </p>
-          <h3 className="text-lg font-black" style={{ color: 'var(--tx)' }}>
-            탐색할 영역을 선택해 주세요
-          </h3>
+        {/* ── Projects — 메인 ── */}
+        <div>
+          <div className="flex items-center gap-3 mb-5">
+            <p className="text-[0.65rem] font-black uppercase tracking-[0.25em]" style={{ color: 'var(--accent)' }}>
+              Projects
+            </p>
+            <span className="flex-1 h-px" style={{ background: 'var(--border-2)' }} />
+            <p className="text-[0.68rem] font-semibold" style={{ color: 'var(--tx-3)' }}>
+              케이스스터디 {caseStudies.length}편
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+            {caseStudies.map((cs, i) => {
+              const stat = cs.steps.find((s) => s.eyebrow === 'IMPACT')?.statTiles?.[0]
+              const isHovered = hovered === cs.slug
+              return (
+                <button
+                  key={cs.slug}
+                  type="button"
+                  onClick={() => onSelectProject(cs.projectId)}
+                  onMouseEnter={() => setHovered(cs.slug)}
+                  onMouseLeave={() => setHovered(null)}
+                  className="card-pop group flex flex-col gap-4 rounded-2xl p-6 text-left transition-all duration-200"
+                  style={{
+                    animationDelay: `${i * 70}ms`,
+                    background: 'var(--surface)',
+                    border: `1px solid ${isHovered ? 'rgba(37,99,235,0.35)' : 'var(--border)'}`,
+                    boxShadow: isHovered ? '0 8px 32px rgba(37,99,235,0.1), var(--shadow-sm)' : 'var(--shadow-sm)',
+                    transform: isHovered ? 'translateY(-3px)' : 'translateY(0)',
+                  }}
+                >
+                  <div>
+                    <p className="text-[0.6rem] font-black uppercase tracking-widest mb-2.5"
+                      style={{ color: isHovered ? 'var(--accent)' : 'var(--tx-3)' }}>
+                      {String(i + 1).padStart(2, '0')} — {cs.title}
+                    </p>
+                    <p
+                      className="text-base font-black leading-snug"
+                      style={{ color: 'var(--tx)', wordBreak: 'keep-all' }}
+                    >
+                      {renderHighlight(cs.coverQuestion)}
+                    </p>
+                  </div>
+
+                  <div className="mt-auto flex items-end justify-between gap-3 pt-3" style={{ borderTop: '1px solid var(--border)' }}>
+                    {stat && (
+                      <div>
+                        <p className="text-[0.6rem] font-bold uppercase tracking-widest mb-0.5" style={{ color: 'var(--tx-3)' }}>
+                          {stat.label}
+                        </p>
+                        <p className="text-lg font-black leading-tight tracking-tight" style={{ color: 'var(--accent)', fontVariantNumeric: 'tabular-nums' }}>
+                          {stat.value}
+                        </p>
+                      </div>
+                    )}
+                    <p className="text-[0.68rem] font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200 shrink-0"
+                      style={{ color: 'var(--accent)' }}>
+                      케이스스터디 →
+                    </p>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
         </div>
 
-        {/* ── Category cards ── */}
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-5">
-          {portfolioCategories.map((cat, i) => {
-            const meta = CATEGORY_META[cat.id]
-            const isHovered = hovered === cat.id
-            return (
-              <button
-                key={cat.id}
-                type="button"
-                onClick={() => onSelectCategory(cat.id)}
-                onMouseEnter={() => setHovered(cat.id)}
-                onMouseLeave={() => setHovered(null)}
-                className="card-pop group relative flex flex-col items-start gap-3 rounded-2xl p-5 text-left transition-all duration-200"
-                style={{
-                  animationDelay: `${i * 70}ms`,
-                  background: 'var(--surface)',
-                  border: `1px solid ${isHovered ? 'rgba(37,99,235,0.35)' : 'var(--border)'}`,
-                  boxShadow: isHovered ? '0 8px 32px rgba(37,99,235,0.1), var(--shadow-sm)' : 'var(--shadow-sm)',
-                  transform: isHovered ? 'translateY(-3px)' : 'translateY(0)',
-                }}
-              >
-                {meta.featured && (
-                  <div
-                    className="absolute -top-2.5 right-3 rounded-full px-2.5 py-0.5 text-[0.55rem] font-black uppercase tracking-wider"
-                    style={{ background: 'var(--accent)', color: '#fff' }}
-                  >
-                    MAIN
-                  </div>
-                )}
-                <div
-                  className="flex h-10 w-10 items-center justify-center rounded-xl text-xl transition-colors duration-200"
-                  style={{ background: isHovered ? 'rgba(37,99,235,0.1)' : 'var(--surface-2)' }}
+        {/* ── 보조 카테고리 ── */}
+        <div>
+          <div className="flex items-center gap-3 mb-4">
+            <p className="text-[0.65rem] font-black uppercase tracking-[0.25em]" style={{ color: 'var(--tx-3)' }}>
+              More
+            </p>
+            <span className="flex-1 h-px" style={{ background: 'var(--border)' }} />
+          </div>
+          <div className="grid grid-cols-2 gap-2.5 md:grid-cols-4">
+            {SUB_CATEGORIES.map((sub) => {
+              const cat = portfolioCategories.find((c) => c.id === sub.id)
+              const isHovered = hovered === sub.id
+              return (
+                <button
+                  key={sub.id}
+                  type="button"
+                  onClick={() => onSelectCategory(sub.id)}
+                  onMouseEnter={() => setHovered(sub.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  className="flex items-center gap-3 rounded-xl px-4 py-3.5 text-left transition-all duration-200"
+                  style={{
+                    background: 'var(--surface)',
+                    border: `1px solid ${isHovered ? 'rgba(37,99,235,0.3)' : 'var(--border)'}`,
+                    transform: isHovered ? 'translateY(-2px)' : 'translateY(0)',
+                  }}
                 >
-                  {meta.icon}
-                </div>
-                <div className="flex-1">
-                  <p className="text-sm font-black mb-1.5 transition-colors duration-200"
-                    style={{ color: isHovered ? 'var(--accent)' : 'var(--tx)' }}>
-                    {cat.label}
-                  </p>
-                  <p className="text-[0.68rem] leading-relaxed" style={{ color: 'var(--tx-3)' }}>
-                    {meta.desc}
-                  </p>
-                </div>
-                <p className="text-[0.68rem] font-bold opacity-0 group-hover:opacity-100 transition-opacity duration-200"
-                  style={{ color: 'var(--accent)' }}>
-                  자세히 보기 →
-                </p>
-              </button>
-            )
-          })}
+                  <span className="text-base">{sub.icon}</span>
+                  <span className="flex-1 min-w-0">
+                    <span className="block text-sm font-bold" style={{ color: isHovered ? 'var(--accent)' : 'var(--tx)' }}>
+                      {sub.label}
+                    </span>
+                    <span className="block text-[0.65rem]" style={{ color: 'var(--tx-3)' }}>
+                      {cat?.items.length ?? 0}개 항목
+                    </span>
+                  </span>
+                  <span className="text-xs" style={{ color: isHovered ? 'var(--accent)' : 'var(--tx-3)' }}>→</span>
+                </button>
+              )
+            })}
+          </div>
         </div>
+
       </div>
     </section>
   )

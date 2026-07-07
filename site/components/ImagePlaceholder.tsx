@@ -5,11 +5,12 @@ import { useState } from 'react'
 interface ImagePlaceholderProps {
   id: string
   description: string
-  aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1'
+  aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1' | '3/4'
   className?: string
   src?: string
   badge?: string
   fillHeight?: boolean
+  noZoom?: boolean
 }
 
 const ratioMap = {
@@ -17,6 +18,7 @@ const ratioMap = {
   '4/3':  'pb-[75%]',
   '3/2':  'pb-[66.67%]',
   '1/1':  'pb-[100%]',
+  '3/4':  'pb-[133.33%]',
 }
 
 export default function ImagePlaceholder({
@@ -27,6 +29,7 @@ export default function ImagePlaceholder({
   src,
   badge,
   fillHeight = false,
+  noZoom = false,
 }: ImagePlaceholderProps) {
   const [open, setOpen] = useState(false)
   const sizeClass = fillHeight ? 'h-full min-h-[220px]' : ratioMap[aspectRatio]
@@ -35,14 +38,14 @@ export default function ImagePlaceholder({
     return (
       <>
         <div
-          className={`relative w-full overflow-hidden rounded-xl ${sizeClass} ${className} cursor-zoom-in group`}
-          onClick={() => setOpen(true)}
+          className={`relative w-full overflow-hidden rounded-xl ${sizeClass} ${className} ${noZoom ? '' : 'cursor-zoom-in group'}`}
+          onClick={noZoom ? undefined : () => setOpen(true)}
           data-image-slot={id}
         >
           <img
             src={src}
             alt={description}
-            className="absolute inset-0 w-full h-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+            className={`absolute inset-0 w-full h-full object-contain${noZoom ? '' : ' transition-transform duration-300 group-hover:scale-[1.02]'}`}
             style={{ background: 'var(--surface-2)' }}
           />
           {badge && (
@@ -53,17 +56,19 @@ export default function ImagePlaceholder({
               {badge}
             </div>
           )}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: 'rgba(0,0,0,0.25)' }}>
-            <div className="rounded-full p-2.5" style={{ background: 'rgba(0,0,0,0.6)' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
-                <circle cx="11" cy="11" r="8"/>
-                <path d="m21 21-4.35-4.35M11 8v6M8 11h6"/>
-              </svg>
+          {!noZoom && (
+            <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ background: 'rgba(0,0,0,0.25)' }}>
+              <div className="rounded-full p-2.5" style={{ background: 'rgba(0,0,0,0.6)' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="m21 21-4.35-4.35M11 8v6M8 11h6"/>
+                </svg>
+              </div>
             </div>
-          </div>
+          )}
         </div>
 
-        {open && (
+        {!noZoom && open && (
           <div
             className="fixed inset-0 z-[9999] flex items-center justify-center p-6 cursor-zoom-out"
             style={{ background: 'rgba(0,0,0,0.93)', backdropFilter: 'blur(20px)' }}

@@ -39,6 +39,23 @@ const careerItems: PortfolioMenuItem[] = [
     tags: ['AI 서비스 기획', '에듀테크', 'AX', 'Tech PM'],
     prompt: 'YBM AI Lab에서 맡은 역할과 성과를 면접 답변처럼 설명해 주세요.',
   },
+  {
+    id: 'activity-siwonschool',
+    categoryId: 'career',
+    title: '시원스쿨 인턴',
+    eyebrow: 'Internship',
+    period: '2023.10 ~ 2024.01',
+    summary:
+      '해외 한국어 학습자를 타깃으로 한 SNS 콘텐츠 전략 기획부터 TOPIK·여행 한국어 교재 편집 실무까지, 사용자 중심의 교육 콘텐츠 기획 역량을 쌓은 인턴 경험입니다.',
+    highlights: [
+      '해외 인플루언서 계정 트렌드 분석을 바탕으로 발음·어휘·문화 4개 유형의 한국어 교육 SNS 콘텐츠 10종 이상 기획',
+      '카피라이팅 개발부터 디자인팀 협업을 통한 콘텐츠 제작까지 기획-실행 전 과정 직접 수행',
+      '초급 학습자·TOPIK 수험생·여행자 등 학습자 유형별로 세분화된 한국어 교재 3종 기획·편집·문항 검수 참여',
+      '비교 분석 보고자료 작성 등 데이터 기반 인사이트 정리 및 내부 연구 지원',
+    ],
+    tags: ['콘텐츠 기획', 'SNS 전략', '교재 기획', '사용자 분석', '카피라이팅'],
+    prompt: '시원스쿨 인턴 경험이 사용자 중심 콘텐츠 기획 역량에 어떻게 연결됐는지 설명해 주세요.',
+  },
 ]
 
 const educationItems: PortfolioMenuItem[] = [
@@ -190,17 +207,18 @@ const activityItems: PortfolioMenuItem[] = [
   {
     id: 'activity-ybm-instructor',
     categoryId: 'activities',
-    title: 'YBM 사내 AI 툴 강사',
+    title: 'YBM 사내 강사 활동',
     eyebrow: 'Internal Lecture',
     period: '2025.07',
     summary:
-      'AI 툴 활용 PPT 제작 방법 강의의 사내 강사로 공식 선정되어 실무 적용법을 공유했습니다.',
+      'YBM 공식 사내 강사 프로그램 제 1회 강사로 선발되어 PPT 기본 제작부터 AI 활용 디자인까지 직접 커리큘럼을 설계하고 강의를 진행했습니다.',
     highlights: [
-      'YBM 사내 공식 강사 선정',
-      'AI 툴을 활용한 PPT 제작 방법 강의',
-      'AI 리터러시를 팀과 조직에 전파하는 경험',
+      '공식 사내 강사 프로그램 제 1회 강사 선발',
+      '커리큘럼 설계 및 강의 교안·실습 자료 직접 제작',
+      'PPT 기본 기능부터 AI 툴 활용 디자인까지 4개 모듈 구성',
+      '회차 당 10명 수강, AI 리터러시 확산에 기여',
     ],
-    tags: ['사내 강의', 'AI 리터러시', 'PPT 제작'],
+    tags: ['사내 강의', 'AI 리터러시', 'PPT 제작', '커리큘럼 설계'],
     prompt: 'YBM 사내 강사 경험을 통해 AI 리터러시 확산 역량을 설명해 주세요.',
   },
   {
@@ -234,22 +252,6 @@ const activityItems: PortfolioMenuItem[] = [
     ],
     tags: ['언어교육', 'AI 챗봇', '에듀테크', '인턴'],
     prompt: '타임교육 인턴 경험이 AI 서비스 기획 역량에 어떻게 연결됐는지 설명해 주세요.',
-  },
-  {
-    id: 'activity-siwonschool',
-    categoryId: 'activities',
-    title: '시원스쿨 인턴',
-    eyebrow: 'Internship',
-    period: '2023.10 ~ 2024.01',
-    summary:
-      'SNS 교육 콘텐츠 기획과 한국어 교재 기획출간에 참여하며 교육 콘텐츠 기획 경험을 넓혔습니다.',
-    highlights: [
-      'SNS 교육 콘텐츠 기획',
-      '한국어 교재 3종 기획출간 참여',
-      '교육 콘텐츠 사용자 관점과 제작 흐름 이해',
-    ],
-    tags: ['교육 콘텐츠', 'SNS 기획', '한국어 교육', '인턴'],
-    prompt: '시원스쿨 인턴 경험에서 배운 교육 콘텐츠 기획 역량을 설명해 주세요.',
   },
   {
     id: 'activity-nikl',

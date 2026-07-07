@@ -13,6 +13,10 @@ import LandingScene from '@/components/LandingScene'
 import HubScene from '@/components/HubScene'
 import CertificateGrid from '@/components/CertificateGrid'
 import RichProjectDetail from '@/components/RichProjectDetail'
+import CaseStudy from '@/components/CaseStudy'
+import { caseStudies } from '@/data/case-studies'
+
+const SHOW_CHAT = false
 
 type Stage = 'landing' | 'hub' | 'console'
 type Message = { role: 'user' | 'assistant'; content: string }
@@ -263,7 +267,7 @@ function ConsoleScene({ messages, input, streaming, activeCategoryId, activeItem
 }) {
   const activeCategory = getCategoryById(activeCategoryId)
   const isCerts = activeCategoryId === 'certs'
-  const RICH_DETAIL_IDS = ['project-classcanvas', 'project-aidt', 'project-ai-trend-lab', 'activity-dakon-hackathon']
+  const RICH_DETAIL_IDS = ['project-classcanvas', 'project-aidt', 'project-ai-trend-lab', 'activity-dakon-hackathon', 'activity-ybm-instructor', 'activity-ai-learning', 'activity-siwonschool']
 
   return (
     <section id="console" className="console-enter h-screen flex flex-col pt-16 overflow-hidden">
@@ -272,7 +276,11 @@ function ConsoleScene({ messages, input, streaming, activeCategoryId, activeItem
       {/* Main grid — flex-1 min-h-0 ensures it fills remaining height without overflow */}
       <div className="flex-1 min-h-0 p-4 md:p-5 overflow-hidden">
         <div
-          className={`h-full grid gap-4 ${isCerts ? 'lg:grid-cols-[1fr_300px]' : 'lg:grid-cols-[220px_minmax(0,1fr)_300px]'}`}
+          className={`h-full grid gap-4 ${
+            isCerts
+              ? SHOW_CHAT ? 'lg:grid-cols-[1fr_300px]' : 'lg:grid-cols-1'
+              : SHOW_CHAT ? 'lg:grid-cols-[220px_minmax(0,1fr)_300px]' : 'lg:grid-cols-[220px_minmax(0,1fr)]'
+          }`}
         >
           {!isCerts && (
             <div className="hidden lg:flex flex-col h-full overflow-hidden rounded-2xl"
@@ -317,7 +325,10 @@ function ConsoleScene({ messages, input, streaming, activeCategoryId, activeItem
                         )}
                       </div>
                     </div>
-                    <RichProjectDetail projectId={activeItem.id} />
+                    {(() => {
+                      const cs = caseStudies.find((c) => c.projectId === activeItem.id)
+                      return cs ? <CaseStudy cs={cs} /> : <RichProjectDetail projectId={activeItem.id} />
+                    })()}
                   </div>
                 ) : (
                   <DetailPanel item={activeItem} />
@@ -326,7 +337,7 @@ function ConsoleScene({ messages, input, streaming, activeCategoryId, activeItem
             )}
           </div>
 
-          <ChatPanel messages={messages} input={input} streaming={streaming} activeCategoryId={activeCategoryId} onInputChange={onInputChange} onSend={onSend} className="h-full" />
+          {SHOW_CHAT && <ChatPanel messages={messages} input={input} streaming={streaming} activeCategoryId={activeCategoryId} onInputChange={onInputChange} onSend={onSend} className="h-full" />}
         </div>
       </div>
     </section>

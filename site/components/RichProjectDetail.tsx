@@ -1,8 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import ImagePlaceholder from '@/components/ImagePlaceholder'
-import { getRichProject, type ProjectSection, type FeatureCardData } from '@/data/project-sections'
+import { getRichProject, type ProjectSection, type FeatureCardData, type TextbookData, type ProcessFlowStep } from '@/data/project-sections'
 
 /* ── renderHighlight ── */
 function renderHighlight(text: string) {
@@ -22,6 +22,29 @@ function CellValue({ value }: { value: string }) {
         style={{ color: 'var(--accent)' }}>
         Notion ↗
       </a>
+    )
+  }
+  if (value.includes('\n')) {
+    return (
+      <span className="flex flex-col gap-2">
+        {value.split('\n').map((line, i) => {
+          const m = line.match(/^([①②③④⑤⑥⑦⑧⑨⑩])\s*(.+)/)
+          if (m) {
+            return (
+              <span key={i} className="flex items-start gap-2">
+                <span
+                  className="shrink-0 w-5 h-5 rounded-full flex items-center justify-center text-[0.6rem] font-black mt-0.5"
+                  style={{ background: 'var(--accent-dim)', color: 'var(--accent)', minWidth: '1.25rem' }}
+                >
+                  {i + 1}
+                </span>
+                <span>{m[2]}</span>
+              </span>
+            )
+          }
+          return <span key={i}>{line}</span>
+        })}
+      </span>
     )
   }
   return <>{value}</>
@@ -147,6 +170,151 @@ function EntryList({ entries }: { entries: { label: string; content: string }[] 
   )
 }
 
+/* ── TextbookGrid ── */
+function TextbookGrid({ books }: { books: TextbookData[] }) {
+  return (
+    <>
+      <style>{`
+        .tb-card { position: relative; z-index: 1; }
+        .tb-card:hover { z-index: 20; }
+        .tb-cover-wrap {
+          position: relative;
+          display: flex;
+          justify-content: center;
+          padding: 0 22%;
+        }
+        .tb-cover {
+          position: relative; z-index: 3;
+          width: 100%; display: block; border-radius: 10px;
+          transition: transform 0.35s ease, box-shadow 0.35s ease;
+          border: 1px solid var(--border);
+        }
+        .tb-card:hover .tb-cover {
+          transform: scale(1.04) translateY(-4px);
+          box-shadow: 0 18px 40px rgba(0,0,0,0.26);
+        }
+        .tb-side-page {
+          position: absolute; top: 3%; width: 48%;
+          z-index: 1; border-radius: 7px;
+          box-shadow: 0 6px 20px rgba(0,0,0,0.16);
+          opacity: 0;
+          transition: transform 0.44s cubic-bezier(0.34,1.2,0.64,1),
+                      opacity 0.22s ease;
+          pointer-events: none;
+        }
+        .tb-left  { left: 26%; transform: translateX(0) rotate(0deg); }
+        .tb-right { left: 26%; transform: translateX(0) rotate(0deg); }
+        .tb-card:hover .tb-side-page { opacity: 1; }
+        .tb-card:hover .tb-left  { transform: translateX(-96%) rotate(-13deg); }
+        .tb-card:hover .tb-right { transform: translateX(96%) rotate(13deg); }
+      `}</style>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        {books.map((book, i) => (
+          <div key={i} className="tb-card flex flex-col gap-3">
+            <div className="tb-cover-wrap">
+              <img src={book.pages[0]} alt="" className="tb-side-page tb-left" />
+              <img src={book.pages[2]} alt="" className="tb-side-page tb-right" />
+              <img
+                src={book.cover}
+                alt={book.title}
+                className="tb-cover object-cover"
+                style={{ aspectRatio: '3/4' }}
+              />
+            </div>
+
+            <div>
+              <span
+                className="inline-block text-[0.58rem] font-black uppercase tracking-widest rounded-full px-2.5 py-1 mb-2"
+                style={{ background: 'var(--accent-dim)', color: 'var(--accent)' }}
+              >
+                {book.target}
+              </span>
+              <p className="text-sm font-black leading-snug mb-1" style={{ color: 'var(--tx)' }}>
+                {book.title}
+              </p>
+              <p className="text-xs leading-relaxed" style={{ color: 'var(--tx-3)' }}>
+                {book.role}
+              </p>
+            </div>
+          </div>
+        ))}
+      </div>
+    </>
+  )
+}
+
+/* ── PptMarquee ── */
+function PptMarquee({ images }: { images: string[] }) {
+  const [paused, setPaused] = useState(false)
+  const reversed = [...images].reverse()
+  const row1 = [...reversed, ...reversed]
+  const row2 = [...images, ...images]
+
+  const trackStyle = (dir: 'ltr' | 'rtl', duration: number): React.CSSProperties => ({
+    display: 'flex',
+    gap: '12px',
+    width: 'max-content',
+    animation: `ppt-marquee-${dir} ${duration}s linear infinite`,
+    animationPlayState: paused ? 'paused' : 'running',
+    willChange: 'transform',
+  })
+
+  const imgStyle: React.CSSProperties = {
+    height: '140px',
+    width: 'auto',
+    borderRadius: '12px',
+    border: '1px solid var(--border)',
+    objectFit: 'cover',
+    flexShrink: 0,
+    transition: 'transform 0.22s ease, box-shadow 0.22s ease',
+    cursor: 'default',
+  }
+
+  return (
+    <>
+      <style>{`
+        @keyframes ppt-marquee-ltr {
+          from { transform: translateX(-50%); }
+          to   { transform: translateX(0%); }
+        }
+        @keyframes ppt-marquee-rtl {
+          from { transform: translateX(0%); }
+          to   { transform: translateX(-50%); }
+        }
+        .ppt-img:hover {
+          transform: scale(1.18) !important;
+          box-shadow: 0 12px 36px rgba(0,0,0,0.22);
+          z-index: 10;
+          position: relative;
+        }
+      `}</style>
+      <div
+        style={{
+          overflowX: 'clip',
+          overflowY: 'visible',
+          borderRadius: '16px',
+          padding: '14px 0',
+          WebkitMaskImage: 'linear-gradient(to right, transparent, black 7%, black 93%, transparent)',
+          maskImage: 'linear-gradient(to right, transparent, black 7%, black 93%, transparent)',
+        }}
+        onMouseEnter={() => setPaused(true)}
+        onMouseLeave={() => setPaused(false)}
+      >
+        <div style={{ ...trackStyle('ltr', 48), marginBottom: '10px' }}>
+          {row1.map((src, i) => (
+            <img key={i} src={src} alt="" className="ppt-img" style={imgStyle} />
+          ))}
+        </div>
+        <div style={trackStyle('rtl', 60)}>
+          {row2.map((src, i) => (
+            <img key={i} src={src} alt="" className="ppt-img" style={imgStyle} />
+          ))}
+        </div>
+      </div>
+    </>
+  )
+}
+
 /* ── Lightbox ── */
 function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
   return (
@@ -170,6 +338,35 @@ function Lightbox({ src, onClose }: { src: string; onClose: () => void }) {
           <path d="M18 6 6 18M6 6l12 12"/>
         </svg>
       </button>
+    </div>
+  )
+}
+
+/* ── ProcessFlow ── */
+function ProcessFlow({ steps }: { steps: ProcessFlowStep[] }) {
+  return (
+    <div className="flex flex-col py-1">
+      {steps.map((s, i) => (
+        <div key={i} className="flex gap-3.5">
+          <div className="flex flex-col items-center shrink-0" style={{ width: '28px' }}>
+            <div
+              className="w-7 h-7 rounded-full flex items-center justify-center text-[0.6rem] font-black shrink-0"
+              style={{ background: 'var(--accent-dim)', color: 'var(--accent)', border: '1.5px solid var(--accent)', boxSizing: 'border-box' }}
+            >
+              {s.step}
+            </div>
+            {i < steps.length - 1 && (
+              <div className="flex-1 w-px my-1.5" style={{ background: 'var(--border-2)', minHeight: '16px' }} />
+            )}
+          </div>
+          <div className={i < steps.length - 1 ? 'pb-5' : ''}>
+            <p className="text-sm font-black mb-1 leading-snug" style={{ color: 'var(--tx)' }}>{s.label}</p>
+            {s.bullets.map((b, j) => (
+              <p key={j} className="text-xs leading-relaxed" style={{ color: 'var(--tx-2)' }}>· {b}</p>
+            ))}
+          </div>
+        </div>
+      ))}
     </div>
   )
 }
@@ -311,7 +508,34 @@ function Section({ section, depth = 0 }: { section: ProjectSection; depth?: numb
         </div>
       )}
 
-      {hasSideLayout ? (
+      {section.textbooks && section.content && (
+        <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--tx-2)' }}>{section.content}</p>
+      )}
+
+      {section.textbooks && (
+        <div className="mb-4">
+          <TextbookGrid books={section.textbooks} />
+        </div>
+      )}
+
+      {section.marquee && (
+        <div className="mb-4">
+          <PptMarquee images={section.marquee.images} />
+        </div>
+      )}
+
+      {section.pdf && section.table ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 items-stretch">
+          <div className="rounded-xl overflow-hidden" style={{ border: '1px solid var(--border)', minHeight: '320px' }}>
+            <iframe
+              src={`${section.pdf}#toolbar=0&navpanes=0&scrollbar=0&view=FitH`}
+              title={section.title ?? 'PDF'}
+              style={{ width: '100%', height: '100%', minHeight: '320px', border: 'none', display: 'block' }}
+            />
+          </div>
+          <DataTable headers={section.table.headers} rows={section.table.rows} />
+        </div>
+      ) : hasSideLayout ? (
         <div className="grid grid-cols-1 gap-4 mb-4 items-stretch md:grid-cols-[minmax(260px,2fr)_minmax(0,3fr)]">
           <ImagePlaceholder
             id={section.imageSlot!.id}
@@ -320,9 +544,11 @@ function Section({ section, depth = 0 }: { section: ProjectSection; depth?: numb
             src={section.imageSlot!.src}
             badge={section.imageSlot!.badge}
             fillHeight
+            noZoom={section.imageSlot!.noZoom}
           />
           <div className="flex h-full flex-col gap-3">
             {section.content && <p className="text-sm leading-relaxed" style={{ color: 'var(--tx-2)' }}>{section.content}</p>}
+            {section.processFlow && <ProcessFlow steps={section.processFlow} />}
             {section.table && <DataTable headers={section.table.headers} rows={section.table.rows} />}
             {section.bullets && <BulletList items={section.bullets} />}
           </div>
@@ -335,8 +561,11 @@ function Section({ section, depth = 0 }: { section: ProjectSection; depth?: numb
                 aspectRatio={section.imageSlot.aspectRatio} src={section.imageSlot.src} badge={section.imageSlot.badge} />
             </div>
           )}
-          {section.content && (
+          {section.content && !section.textbooks && (
             <p className="text-sm leading-relaxed mb-4" style={{ color: 'var(--tx-2)' }}>{section.content}</p>
+          )}
+          {section.processFlow && (
+            <div className="mb-4"><ProcessFlow steps={section.processFlow} /></div>
           )}
           {section.table && (
             <div className="mb-4"><DataTable headers={section.table.headers} rows={section.table.rows} /></div>
@@ -366,28 +595,79 @@ export default function RichProjectDetail({ projectId }: { projectId: string }) 
 
   return (
     <div className="space-y-6 p-6 md:p-7">
-      <div className="space-y-2">
-        <p className="text-base leading-relaxed font-medium" style={{ color: 'var(--tx-2)' }}>
-          {renderHighlight(rich.tagline)}
-        </p>
-        {rich.subtitle && (
-          <p className="text-sm font-semibold" style={{ color: 'var(--tx-3)' }}>
-            {rich.subtitle}
+      {rich.headerImage ? (
+        <div className="space-y-4">
+          <div className="space-y-2">
+            <p className="text-base leading-relaxed font-medium" style={{ color: 'var(--tx-2)' }}>
+              {renderHighlight(rich.tagline)}
+            </p>
+            {rich.subtitle && (
+              <p className="text-sm font-semibold" style={{ color: 'var(--tx-3)' }}>
+                {rich.subtitle}
+              </p>
+            )}
+            {rich.description && (
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--tx-2)' }}>
+                {rich.description}
+              </p>
+            )}
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-stretch">
+            <img
+              src={rich.headerImage}
+              alt=""
+              className="w-full h-full rounded-xl object-contain"
+              style={{ border: '1px solid var(--border)' }}
+            />
+            <div>
+              <p className="text-[0.6rem] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--tx-3)' }}>
+                Overview
+              </p>
+              <DataTable headers={rich.overview.headers} rows={rich.overview.rows} forceTable />
+            </div>
+          </div>
+        </div>
+      ) : rich.hideOverview ? (
+        <div className="space-y-2">
+          <p className="text-base leading-relaxed font-medium" style={{ color: 'var(--tx-2)' }}>
+            {renderHighlight(rich.tagline)}
           </p>
-        )}
-        {rich.description && (
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--tx-2)' }}>
-            {rich.description}
-          </p>
-        )}
-      </div>
-
-      <div>
-        <p className="text-[0.6rem] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--tx-3)' }}>
-          Overview
-        </p>
-        <DataTable headers={rich.overview.headers} rows={rich.overview.rows} forceTable />
-      </div>
+          {rich.subtitle && (
+            <p className="text-sm font-semibold" style={{ color: 'var(--tx-3)' }}>
+              {rich.subtitle}
+            </p>
+          )}
+          {rich.description && (
+            <p className="text-sm leading-relaxed" style={{ color: 'var(--tx-2)' }}>
+              {rich.description}
+            </p>
+          )}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 items-start">
+          <div className="space-y-2">
+            <p className="text-base leading-relaxed font-medium" style={{ color: 'var(--tx-2)' }}>
+              {renderHighlight(rich.tagline)}
+            </p>
+            {rich.subtitle && (
+              <p className="text-sm font-semibold" style={{ color: 'var(--tx-3)' }}>
+                {rich.subtitle}
+              </p>
+            )}
+            {rich.description && (
+              <p className="text-sm leading-relaxed" style={{ color: 'var(--tx-2)' }}>
+                {rich.description}
+              </p>
+            )}
+          </div>
+          <div>
+            <p className="text-[0.6rem] font-bold uppercase tracking-widest mb-3" style={{ color: 'var(--tx-3)' }}>
+              Overview
+            </p>
+            <DataTable headers={rich.overview.headers} rows={rich.overview.rows} forceTable />
+          </div>
+        </div>
+      )}
 
       {rich.sections.map((section) => (
         <div

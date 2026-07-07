@@ -2,7 +2,30 @@
   "permissions": {
     "allow": [
       "Bash(dir \"C:\\\\Users\\\\krhd1\\\\Desktop\\\\vibecoding\\\\portfolio\")",
-      "Bash(start \"\" \"http://localhost:3000\")"
+      "Bash(start \"\" \"http://localhost:3000\")",
+      "Bash(npm run *)",
+      "Bash(node -e \"const d=require\\('./data/embeddings.json'\\); console.log\\(d.generated_at, d.model, d.chunks.length\\)\")",
+      "Bash(sed 's/src=//')",
+      "Bash(read p *)",
+      "Bash([ -f \"public$p\" ])",
+      "Bash(npx tsc *)",
+      "Bash(node *)",
+      "Bash(mkdir -p /c/Users/krhd1/AppData/Local/Temp/claude/C--Users-krhd1-Desktop-vibecoding-portfolio/4867558d-0602-4626-ad5d-2bec4018f710/scratchpad/ref)",
+      "Read(//c/Users/krhd1/AppData/Local/Temp/claude/C--Users-krhd1-Desktop-vibecoding-portfolio/4867558d-0602-4626-ad5d-2bec4018f710/scratchpad/**)",
+      "Bash(unzip -o -q \"/c/Users/krhd1/Desktop/portfolio/portfolio_reference.pptx\" \"ppt/slides/*.xml\")",
+      "Bash(awk '/projectId: .project-ai-trend-lab/,/^  \\\\},$/' data/project-sections.ts)",
+      "Skill(dataviz)",
+      "Bash(python -c ' *)",
+      "Bash(python *)",
+      "WebFetch(domain:www.skills.sh)",
+      "Bash(curl -s -o /dev/null -w \"status=%{http_code}\\\\n\" http://localhost:3000/case-study/trend-lab)",
+      "Bash(curl -s http://localhost:3000/case-study/trend-lab)",
+      "Bash(taskkill //PID 23248 //F)",
+      "Bash(netstat -ano)",
+      "Bash(curl -s http://localhost:3000/ -o /dev/null -w \"home: %{http_code}\\\\n\")",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"home: %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /dev/null -w \"old-route: %{http_code}\\\\n\" http://localhost:3000/case-study/trend-lab)"
     ]
   }
 }

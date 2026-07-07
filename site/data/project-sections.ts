@@ -13,6 +13,20 @@ export interface FeatureCardData {
   src?: string
 }
 
+export interface TextbookData {
+  title: string
+  target: string
+  role: string
+  cover: string
+  pages: [string, string, string]
+}
+
+export interface ProcessFlowStep {
+  step: string
+  label: string
+  bullets: string[]
+}
+
 export interface ProjectSection {
   id: string
   title?: string
@@ -21,10 +35,14 @@ export interface ProjectSection {
   bullets?: string[]
   entries?: { label: string; content: string }[]
   table?: TableData
-  imageSlot?: { id: string; description: string; aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1'; src?: string; badge?: string; collapsible?: boolean }
-  images?: { id: string; description: string; aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1'; src?: string; badge?: string }[]
+  imageSlot?: { id: string; description: string; aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1' | '3/4'; src?: string; badge?: string; collapsible?: boolean; noZoom?: boolean }
+  images?: { id: string; description: string; aspectRatio?: '16/9' | '4/3' | '3/2' | '1/1' | '3/4'; src?: string; badge?: string }[]
   featureCards?: FeatureCardData[]
+  textbooks?: TextbookData[]
+  marquee?: { images: string[] }
+  pdf?: string
   sideLayout?: boolean
+  processFlow?: ProcessFlowStep[]
   subsections?: ProjectSection[]
 }
 
@@ -33,6 +51,8 @@ export interface RichProjectData {
   tagline: string
   subtitle?: string
   description?: string
+  headerImage?: string
+  hideOverview?: boolean
   overview: TableData
   sections: ProjectSection[]
 }
@@ -415,7 +435,8 @@ export const richProjects: RichProjectData[] = [
     tagline: '기획자가 **바이브코딩**으로 실제 서비스를 구현해 **2위를 수상**하다',
     subtitle: '해커톤 참가부터 협업·제출까지 이어지는 올인원 워크스페이스, MAXER',
     description:
-      'Dakon의 "긴급 인수인계 해커톤 — 문서만 남기고 사라졌다"는 미완성 웹페이지를 제공된 자료를 바탕으로 완성하고, 팀만의 아이디어로 기능과 UX를 확장해 더 나은 서비스 경험을 제안하는 대회였다. 초보 개발자가 어디서부터 구현해야 할지 막막한 상황을 전제로, 바이브코딩을 활용해 자료를 해석하고 실제 웹페이지 형태의 서비스를 완성해야 했다.',
+      'Dakon의 "긴급 인수인계 해커톤 — 문서만 남기고 사라졌다"는 미완성 웹페이지를 제공된 자료를 바탕으로 완성하고, 팀만의 아이디어로 기능과 UX를 확장해 더 나은 서비스 경험을 제안하는 대회였다. 바이브코딩을 활용해 자료를 해석하고 실제 웹페이지 형태의 서비스를 완성해야 했다.',
+    headerImage: '/images/activity/hackathon_certificate.png',
     overview: {
       headers: ['항목', '내용'],
       rows: [
@@ -464,10 +485,9 @@ export const richProjects: RichProjectData[] = [
             badge: '핵심 기능 01',
             title: '프로필 기반 스코어링 매칭 엔진',
             bullets: [
-              '데이터 소스: 마이페이지 프로필 입력 (주 역할·관심 분야·기술 스택·협업 강점)',
-              '해커톤 추천: 분야 적합성 45pt, 직무 일치 25pt, 기술 스택 20pt — 20점 미만 노출 제외',
-              '팀 매칭: 포지션 직결 50pt, 인접 포지션 28pt, 기술 시너지 30pt',
-              '결과 표시: 매칭 점수, 추천 사유 태그, 팀장용 즉시 초대 기능',
+              '마이페이지 프로필(역할·분야·기술 스택)을 기반으로 해커톤·팀원 추천',
+              '항목별 가중치를 반영한 스코어링 알고리즘 직접 설계',
+              '매칭 결과에 추천 태그와 즉시 초대 기능을 함께 제공',
             ],
             src: '/images/activity/maxer-p7.png',
           },
@@ -475,10 +495,9 @@ export const richProjects: RichProjectData[] = [
             badge: '핵심 기능 02',
             title: '올인원 베이스캠프',
             bullets: [
-              '정보 탭: 팀 현황, 타임라인, 팀장 전용 관리 센터',
-              '작전실 탭: 진행 상황 추적기, 제출 허브, D-day 카운트다운, 팀 공유 메모',
-              '게시판: 칸반형 아이디어 보드 (아이디어·리소스·할 일)',
-              '최소한의 허브 기능으로 플랫폼 내 핵심 활동 완수 지원',
+              '팀 정보·타임라인·팀장 관리 센터를 하나의 정보 탭으로 통합',
+              '진행 상황 추적기·제출 허브·D-day 카운트다운 등 협업 도구 내재화',
+              '칸반형 아이디어 보드로 팀 내 아이디어·리소스·할 일 관리',
             ],
             src: '/images/activity/maxer-p9.png',
           },
@@ -486,10 +505,9 @@ export const richProjects: RichProjectData[] = [
             badge: '핵심 기능 03',
             title: '성장 네트워킹 루프',
             bullets: [
-              '포인트 적립: 팀 만들기·참여 +30pt, 단계별 과제 제출 +100pt, 투표 +5pt',
-              '랭킹 = (참가 횟수 × 50) + (제출 횟수 × 100) + 누적 행동 포인트 + 순위 가점',
-              '설계 의도: 10번 참가 3번 제출한 사람 > 1번 우승한 사람',
-              '루프: 행동 → 포인트 즉시 적립 → 실시간 랭킹 상승 → 새로운 팀 초대 → 재참가',
+              '참가·제출·투표 등 행동에 포인트를 즉시 적립하는 시스템 설계',
+              '우승 횟수보다 참가 빈도를 중심으로 한 랭킹 산정 기준 정의',
+              '행동 → 포인트 → 랭킹 → 팀 초대 → 재참가로 이어지는 성장 루프 설계',
             ],
             src: '/images/activity/maxer-p11.png',
           },
@@ -528,6 +546,173 @@ export const richProjects: RichProjectData[] = [
             },
           },
         ],
+      },
+    ],
+  },
+  // ACTIVITY: YBM 사내 AI 툴 강사
+  {
+    projectId: 'activity-ybm-instructor',
+    tagline: 'YBM 공식 사내 강사 프로그램에서 **제 1회 사내 강사로 선발**',
+    subtitle: 'PPT 기본 제작 방법부터 AI 활용 디자인 노하우까지',
+    description:
+      '사내 구성원들의 업무 역량 향상을 위해 효과적인 PPT 제작 방법에 대한 강의를 진행하였습니다. 내용을 효과적으로 전달하기 위한 전략, 업무 시간을 줄여주는 단축키, AI툴을 활용한 시각 자료 제작까지 직접 커리큘럼을 설계하고 교안을 제작하여 강의를 진행하였습니다.',
+    // 원본 ybm_ppt_main.gif(112MB)는 GitHub 100MB 제한으로 저장소에서 제외 — 경량 변환 전까지 첫 슬라이드로 대체
+    headerImage: '/images/activity/ppt/ybm_ppt1.png',
+    overview: {
+      headers: ['항목', '내용'],
+      rows: [
+        ['수강 인원', '회차 당 10명'],
+        ['역할', '커리큘럼 설계, 강의 교안 및 실습 자료 제작, 강의 진행'],
+        ['강의 내용', '① 용도에 맞는 템플릿 디자인하기\n② 효과적인 내용 전달을 위한 인포그래픽 디자인하기\n③ 모핑 활용하여 전달력 높이기\n④ AI 활용 PPT 제작 — 일러스트 제작, 반응형 PPT 만들기'],
+      ],
+    },
+    sections: [
+      {
+        id: 'ybm-lecture-slides',
+        title: '강의 교안',
+        marquee: {
+          images: Array.from({ length: 13 }, (_, i) => `/images/activity/ppt/ybm_ppt${i + 1}.png`),
+        },
+      },
+    ],
+  },
+
+  // ACTIVITY: AI 실무 교육 & 바이브코딩
+  {
+    projectId: 'activity-ai-learning',
+    tagline: '새로운 기술이 나오면 **누구보다 빠르게** 직접 써보고, 실무에 붙여보는 것을 즐깁니다',
+    subtitle: 'AI 활용 업무 효율화 및 바이브코딩 교육 수강 · 2025.08 ~ 2025.12',
+    description:
+      '배움에 머무르지 않고 직접 만들어보는 것이 제 방식입니다. AI가 업무 방식을 바꿔가는 속도를 현장에서 실감하면서, 관련 교육을 꾸준히 찾아 수강하고 그 내용을 곧바로 실무와 개인 프로젝트에 적용해왔습니다.',
+    hideOverview: true,
+    overview: { headers: ['항목', '내용'], rows: [] },
+    sections: [
+      {
+        id: 'edu-kisa',
+        title: 'KISA 웹테크 밋업데이',
+        pdf: '/images/activity/vibecoding_edu/kisa.pdf',
+        table: {
+          headers: ['항목', '내용'],
+          rows: [
+            ['일시', '2025.08'],
+            ['배운 것', '① Cursor AI 기반 서비스 구현 실습\n② AI API와 MCP 활용 방식 학습'],
+            ['성과', '사내 AX 툴을 직접 개발하게 되는 계기'],
+          ],
+        },
+      },
+      {
+        id: 'edu-connecton',
+        title: '부스트코스 Connect On',
+        pdf: '/images/activity/vibecoding_edu/connecton1.pdf',
+        table: {
+          headers: ['항목', '내용'],
+          rows: [
+            ['일시', '2025.09 / 2025.12 (2회 수강)'],
+            ['배운 것', '① AI 기반 업무 자동화\n② 생성형 AI를 활용한 기획서 작성 흐름\n③ Google AI Studio 활용 바이브코딩'],
+            ['성과', '바이브코딩 포트폴리오 제작의 기술적 기반'],
+          ],
+        },
+      },
+    ],
+  },
+
+  // CAREER: 시원스쿨 인턴
+  {
+    projectId: 'activity-siwonschool',
+    tagline: '해외 한국어 학습자를 위해, **사용자를 먼저 분석하고 콘텐츠로 설계했습니다**',
+    subtitle: '시원스쿨 한국어팀 인턴 · 2023.10 ~ 2024.01',
+    description:
+      '교육 회사에서 처음으로 기획 업무를 경험했습니다. 해외 한국어 학습자라는 명확한 타깃을 앞에 두고, 그들이 어떤 채널에서 어떤 방식으로 콘텐츠를 소비하는지를 먼저 파악했습니다. 분석한 내용을 바탕으로 콘텐츠 유형을 직접 설계하고, 카피라이팅부터 디자인팀 협업까지 기획의 전 과정을 직접 수행했습니다.',
+    overview: {
+      headers: ['항목', '내용'],
+      rows: [
+        ['기간', '2023.10 ~ 2024.01'],
+        ['소속', '시원스쿨 한국어팀'],
+        ['역할', 'SNS 콘텐츠 기획, 교재 기획 및 편집'],
+      ],
+    },
+    sections: [
+      {
+        id: 'siwon-sns',
+        title: 'SNS 교육 콘텐츠 기획',
+        sideLayout: true,
+        imageSlot: {
+          id: 'sns-result',
+          src: '/images/career/siwon/sns_1.png',
+          description: 'SNS 콘텐츠 결과물',
+          aspectRatio: '3/4',
+          noZoom: true,
+        },
+        processFlow: [
+          {
+            step: '01',
+            label: '타깃 & 트렌드 분석',
+            bullets: [
+              '해외 한국어 학습자 니즈·관심 유형 파악',
+              '경쟁 채널 포지셔닝 및 차별화 포인트 도출',
+            ],
+          },
+          {
+            step: '02',
+            label: '콘텐츠 유형 설계',
+            bullets: [
+              '발음·어휘·문화·생활 4개 카테고리 직접 정의',
+              '유형별 학습 목표·표현 방식·포맷 설계',
+            ],
+          },
+          {
+            step: '03',
+            label: '제작 & 커리큘럼 설계',
+            bullets: [
+              '10종+ 콘텐츠 기획·카피·디자인·제작 전 과정 직접 수행',
+              '향후 시리즈 확장을 위한 커리큘럼 구조 설계',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'siwon-textbook',
+        title: '한국어 교재 3종 기획 & 편집',
+        content: '초급 학습자, TOPIK 수험생, 여행자 등 학습자 유형을 세분화하여 각기 다른 목적과 수준에 맞는 교재 3종의 기획·편집·문항 검수에 참여했습니다.',
+        textbooks: [
+          {
+            title: '처음 시작하는 한국어',
+            target: '초급 학습자',
+            role: '한글 자모·발음 콘텐츠 기획 및 편집',
+            cover: '/images/career/siwon/first_korean.jpg',
+            pages: [
+              '/images/career/siwon/first_korean_1.png',
+              '/images/career/siwon/first_korean_2.png',
+              '/images/career/siwon/first_korean_3.png',
+            ],
+          },
+          {
+            title: '토픽1 실전 모의고사 3회',
+            target: 'TOPIK 수험생',
+            role: '어휘 레벨 기준 문항 기획·검수',
+            cover: '/images/career/siwon/topik_korean.jpg',
+            pages: [
+              '/images/career/siwon/topik_korean_1.png',
+              '/images/career/siwon/topik_korean_2.png',
+              '/images/career/siwon/topik_korean_3.png',
+            ],
+          },
+          {
+            title: 'Basic Korean for Travelers',
+            target: '여행자',
+            role: '실용 표현 콘텐츠 기획 및 편집',
+            cover: '/images/career/siwon/travel_korean.jpg',
+            pages: [
+              '/images/career/siwon/travel_korean_1.png',
+              '/images/career/siwon/travel_korean_2.png',
+              '/images/career/siwon/travel_korean_3.png',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'siwon-takeaway',
+        highlight: '"사용자가 어디서, 어떻게 배우는지를 먼저 이해해야 좋은 콘텐츠를 설계할 수 있다" — 이 경험에서 처음 배운 기획의 출발점',
       },
     ],
   },

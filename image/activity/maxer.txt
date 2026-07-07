@@ -1,0 +1,283 @@
+[SECTION: PROJECT_HEADER]
+type: project_header
+purpose: 프로젝트 타이틀, 메타 정보, 링크 모음
+title: "MAXER"
+subtitle: "해커톤 참가부터 협업·제출까지 이어지는 워크스페이스"
+hook: "비개발자가 기획만으로 팀을 이끌고, 바이브코딩으로 실제 서비스를 구현해 2위를 수상하다"
+badge: "DAKON 해커톤 · 2위 수상"
+period: "2026.03 ~ 2026.04"
+overview:
+type: table_data
+
+label: "일시"
+value: "2026.03.05 ~ 2026.04.13 (결과 발표: 2026.04.24)"
+label: "주최"
+value: "Dakon"
+label: "팀명"
+value: "M.I.O"
+label: "팀원"
+value: "강유진, 조정연 (2인)"
+label: "역할"
+value: "서비스 기획 전 과정 · 바이브코딩으로 실제 페이지 구현 · 뒷단 로직 설계"
+label: "결과"
+value: "2위 수상"
+
+tech_stack:
+framework: "Next.js 15 (App Router)"
+state: "Zustand + localStorage"
+styling: "Tailwind CSS"
+deployment: "Vercel"
+dev_method: "바이브코딩"
+links:
+
+label: "서비스 데모"
+url: "https://daker-hackathon-tau.vercel.app/"
+label: "기획 문서 (Notion)"
+url: "https://www.notion.so/Daker-744b1f4f640a8390b54301c81dd7b885"
+
+image_hero: "[IMAGE: MAXER 메인 화면 또는 수상 현장 사진]"
+
+[SECTION: STEP_1_CONTEXT]
+type: project_step
+step_number: 1
+step_label: "문제 정의"
+step_title: "해커톤 경험이 깨지는 순간은 어디인가"
+context: |
+해커톤에 참가하려는 사람이 실제로 겪는 문제는 "아이디어가 없다"가 아니다.
+팀 모집·협업·제출이 각각 다른 플랫폼에 분산되어 있어,
+가장 집중해야 할 순간에 도구 전환에 에너지를 소모한다.
+ux_journey_findings:
+type: table_data
+UI 권장: 좌측 UX 여정 지도 이미지 + 우측 테이블
+
+stage: "팀 모집"
+pain: "매칭 실패 & 미스매치"
+root_cause: "스킬·역할 정보 없이 텍스트 자기소개만으로 팀원 판단"
+design_direction: "점수 기반 매칭 엔진"
+stage: "협업"
+pain: "진행 상황 공유 불가"
+root_cause: "카카오톡·노션·구글독스 분산 사용"
+design_direction: "팀 전용 올인원 베이스캠프"
+stage: "제출"
+pain: "마감 직전 혼선"
+root_cause: "마감 기준·제출 방식을 따로 확인해야 함"
+design_direction: "단일 제출허브로 통합"
+stage: "사후"
+pain: "참가 이력 소멸"
+root_cause: "해커톤 종료 후 경험이 어디에도 정리되지 않음"
+design_direction: "포인트 기반 이력 자산화"
+
+image_ux_journey: "[IMAGE: UX 여정 지도 — 4단계(탐색·팀구성·대회진행·결과) + 감정곡선 전체]"
+
+[SECTION: STEP_2_SOLUTION]
+type: project_step
+step_number: 2
+step_label: "솔루션 설계"
+step_title: "3개 고통 지점에 1:1 대응하는 핵심 기능 3가지"
+solution_overview: |
+각 고통 지점에 기능을 1:1로 대응시켰다.
+"해커톤의 시작부터 협업, 제출까지 끊기지 않는 경험"이 핵심 가치다.
+core_features:
+type: table_data (3열 카드 또는 테이블)
+
+feature: "스마트 팀 매칭"
+problem_solved: "스킬·역할 미스매치"
+design: "GitHub·기술스택·역할·이전 이력 정량화 → 점수 매트릭스로 최적 팀원 추천"
+feature: "올인원 베이스캠프"
+problem_solved: "협업 도구 분산"
+design: "작전실·제출허브·게시판 3탭 단일 워크스페이스"
+feature: "단일 제출허브"
+problem_solved: "마감 혼선"
+design: "결과물 링크·파일·발표자료 중앙 관리 및 체계적 제출 흐름"
+
+ia_structure: |
+전체 IA: 홈(맞춤 추천·빠른 시작) → 해커톤 목록·상세 / 팀 빌딩 / 랭킹 / 마이페이지
+순환 구조: 매칭 → 베이스캠프 → 제출 → 포트폴리오 누적 → 재참여 유도
+image_solution_table: "[IMAGE: Step 2 솔루션 설계 테이블 — 기능·해결 문제·핵심 설계 3열]"
+image_ia: "[IMAGE: 전체 서비스 구조도 (IA)]"
+
+[SECTION: STEP_3_SYSTEM_DESIGN]
+type: project_step
+step_number: 3
+step_label: "기능 상세 설계"
+step_title: "실제로 동작하는 서비스를 만들기 위해 설계한 것들"
+system_design_intro: |
+겉면의 기능 목록이 아니라, 실제로 서비스가 동작하려면
+사용자의 상태 변화에 따라 화면과 권한이 달라져야 한다.
+한 사용자가 서비스에 진입하는 순간부터 제출 완료까지
+발생하는 모든 상태 변수를 정의하고, 각 분기를 설계했다.
+[SUB: 핵심 기능 01 — 프로필 기반 스코어링 매칭 엔진]
+matching_engine:
+description: "마이페이지에서 프로필(주 역할·관심 분야·기술 스택·협업 강점)을 1회 입력하면, 이후 해커톤 추천과 팀원 추천이 자동화된다."
+hackathon_score:
+label: "해커톤 추천 점수 체계"
+# type: table_data
+items:
+- item: "분야 적합성 (관심 분야 일치)"
+weight: "45pt"
+- item: "직무 일치 (주 역할 직접 일치)"
+weight: "25pt"
+- item: "직무 인접 (인접 역할 중첩)"
+weight: "12pt"
+- item: "기술 스택 (스택 일치, 개당 10pt / 최대 2개)"
+weight: "20pt"
+- item: "모집 상태 (모집 중 +6pt / 마감 임박 +4pt)"
+weight: "10pt"
+filter: "임계값 필터: 20점 미만 노출 제외"
+behavioral_design: "마감 임박 가점 → 행동 경제학적 긴박감 부여, 빠른 팀 결성 유도"
+team_score:
+label: "팀 매칭 점수 체계"
+# type: table_data
+items:
+- item: "포지션 직결 (내 역할 — 팀 모집 포지션 직결)"
+weight: "50pt"
+- item: "인접 포지션 (기여 가능한 인접 포지션)"
+weight: "28pt"
+- item: "기술 시너지 (스택 일치, 개당 10pt)"
+weight: "30pt"
+- item: "보너스 (신규 팀 +3pt / 마감임박 60%↑ 팀 가점)"
+weight: "가점"
+taxonomy_design: |
+match-taxonomy.ts로 표준 키워드 정규화:
+주 역할 / 관심 분야 / 기술 스택 / 협업 강점 4개 축으로 분류
+→ 플랫폼 전체 추천 로직의 공통 입력값으로 활용
+image_matching_algo: "[IMAGE: 핵심 기능 01 — 매칭 알고리즘 슬라이드 전체]"
+[SUB: 핵심 기능 02 — 올인원 베이스캠프]
+basecamp:
+description: |
+해커톤에 참가하는 순간 팀 전용 베이스캠프가 생성된다.
+기존 방식(오픈채팅 생성 → 노션 페이지 공유 → 공유 드라이브 생성)을
+단일 워크스페이스로 대체한다.
+three_tab_structure:
+# type: table_data (3열)
+- tab: "정보 탭"
+features: "팀 현황 · 타임라인 · 팀장 전용 관리 센터"
+problem_solved: "팀 빌딩 현황과 진행 일정 한눈에 파악"
+- tab: "작전실 탭"
+  features: "진행 상황 추적기 · 제출 허브(기획/디자인/개발 상태) · D-day 카운트다운 · 팀 공유 메모"
+  problem_solved: "분산된 협업 도구 → 단일 허브로 통합"
+
+- tab: "게시판"
+  features: "칸반형 아이디어 보드 (아이디어·리소스·할 일)"
+  problem_solved: "해커톤 종료 후 단절 → 지속 성장 루프 설계"
+image_basecamp: "[IMAGE: 핵심 기능 02 — 베이스캠프 3탭 구조도 + 실제 화면]"
+[SUB: 핵심 기능 03 — 성장 네트워킹 루프]
+growth_loop:
+description: |
+수상 여부와 무관하게 참가의 모든 순간이 포인트로 쌓이고,
+그 데이터가 랭킹과 다음 팀원 추천으로 이어지는 순환 구조를 설계했다.
+point_structure:
+label: "포인트 적립 구조 (비수상 영역)"
+# type: table_data
+items:
+- action: "팀 만들기 / 팀 참여하기"
+points: "+30pt"
+- action: "단계별 과제 제출"
+points: "+100pt"
+- action: "투표 참여"
+points: "+5pt"
+ranking_logic: |
+총점 = (참가 횟수 × 50) + (제출 횟수 × 100) + 누적 행동 포인트 + 순위 가점
+설계 의도: 10번 참가하고 3번 제출한 사람이 1번 우승한 사람보다 높은 랭킹을 얻도록 설계
+→ 수상 여부와 무관하게 꾸준한 참여를 정량화해 재참여 동기 부여
+loop_flow:
+# type: flow_diagram (행동 → 포인트 즉시 적립 → 실시간 랭킹 상승 → 새로운 팀의 초대 수신 → 다시 대회 참가)
+steps: ["행동(제출·투표·팀 개설)", "포인트 즉시 적립", "실시간 랭킹 상승", "새로운 팀의 초대 수신", "다시 대회 참가"]
+image_growth_loop: "[IMAGE: 핵심 기능 03 — 성장 네트워킹 루프 다이어그램]"
+[SUB: 상태별 분기 설계 — 서비스가 실제로 동작하기 위한 조건 설계]
+state_design:
+intro: |
+서비스가 실제로 동작한다는 것은, 사용자의 상태가 바뀔 때마다
+화면과 권한이 정확하게 달라진다는 의미다.
+한 사용자가 처음 진입해서 프로필을 설정하고, 해커톤에 참가하고,
+팀을 구성하고, 제출하고, 랭킹에 반영되기까지의 모든 상태 변화를
+정의하고 각 분기를 설계했다.
+state_branches:
+# type: 4개 카드
+- state: "① 비로그인 상태"
+behavior: "팀 작성·투표 등 기능 접근 시 AuthModal 자동 트리거 → 로그인 완료 후 원래 의도한 액션 자동 재개"
+tech_note: "requireAuth() / URL 파라미터 ?create=true 감지 후 액션 복원"
+- state: "② 프로필 미설정 상태"
+  behavior: "매칭·추천 섹션 전체 비활성 + '프로필을 설정하면 추천을 받을 수 있다' 안내 문구 + [프로필 설정하기] 버튼 노출"
+  tech_note: "hasMatchingProfile() / canUseMatching 플래그 분기"
+
+- state: "③ 팀원 vs 팀장"
+  behavior: "팀 관리 센터·모집 상태 변경·팀 삭제 등은 팀장에게만 노출. 팀원은 UI 자체가 렌더링되지 않으며, URL 직접 접근해도 동일하게 차단"
+  tech_note: "isLeader 조건 분기 / 컴포넌트 레벨 완전 숨김"
+
+- state: "④ 대회 Phase (4단계)"
+  behavior: "모집→제출→투표→심사 단계별로 기능이 순차적으로 열림. 현재 단계에 맞는 안내 문구와 액션 버튼이 자동 전환"
+  tech_note: "GallerySection Phase 4단계 분기 / 각 Phase별 메시지·액션 개별 설계"
+additional_logic:
+- name: "투표 공정성 방어"
+detail: "자기 팀 투표·중복 투표·한도 초과를 3중 조건으로 순차 검증. 해커톤별 독립 투표 이력으로 관리해 섞이지 않도록 설계"
+tech_note: "addVotedTeam() 3중 조건 순차 검증 / votedTeamsByHackathonRecord 구조"
+- name: "능동적 알림 시스템"
+  detail: "팀 초대·마감 임박·모집 현황을 플랫폼이 먼저 알려주는 구조. 발신·수신 양쪽 상태 동기화, 수락·거절·취소까지 알림 화면 내에서 완결"
+  tech_note: "useNotificationStore 수신·발신 독립 관리 / acceptInvitation → addTeamCode + memberCount 원자적 실행"
+
+- name: "실시간 랭킹 반영"
+  detail: "제출·투표 등 모든 액션 발생 시 포인트가 즉시 재계산되어 랭킹에 반영. 마이페이지 포인트 내역에도 동시 누적"
+  tech_note: "queueMicrotask → 즉시 재계산 → 랭킹 반영"
+
+- name: "적응형 UX"
+  detail: "375px 모바일 ~ 1440px 데스크톱 전 컴포넌트 반응형 적용. 다크모드 3모드(light/dark/system) — OS 설정 자동 감지, 세션 간 유지. 토스트 피드백은 단순 '완료'가 아닌 행동의 결과까지 설명 (예: '투표가 반영되었습니다. 랭킹과 포인트에 바로 반영됩니다')"
+  tech_note: "useThemeStore + localStorage persist / window.matchMedia OS 감지 / useToast 훅 전 컴포넌트 통일"
+design_insight: |
+이 과정에서 서비스 기획자로서 배운 것이 있다.
+기능 목록을 나열하는 것과, 실제로 동작하는 서비스를 설계하는 것은 다른 일이다.
+한 사용자가 처음 진입해서 프로필을 설정하고, 해커톤에 참가해서 팀장이 되고,
+팀원을 추가하고, 단계별 제출을 완료하고, 그 결과가 리더보드에 실시간으로 반영되기까지—
+이 흐름에서 발생하는 상태 변수와 권한 분기를 모두 정의해야 서비스가 동작한다.
+겉면의 화면만 기획하는 것이 아니라, 뒷단 로직까지 설계할 때
+비로소 사용자 경험이 끊기지 않는다는 것을 직접 구현하며 체득했다.
+image_state_branches: "[IMAGE: 완성도 포인트 ① — 상태별 분기 설계 슬라이드]"
+image_vote_system: "[IMAGE: 완성도 포인트 ② — 능동적 알림·공정한 투표 시스템]"
+image_adaptive_ux: "[IMAGE: 완성도 포인트 ③ — 적응형 UX (반응형·다크모드·토스트)]"
+
+[SECTION: STEP_4_RESULT]
+type: project_step
+step_number: 4
+step_label: "결과 & 회고"
+result:
+award: "2위 수상"
+judge_comment: "현실적인 문제 인식과 구체적인 해결 방안"
+impact_metrics:
+type: 3개 하이라이트 카드
+
+metric: "2위 수상"
+context: "심사 평가: '현실적인 문제 인식과 구체적인 해결 방안'"
+significance: "기획의 논리적 완성도가 수상 근거로 명시됨"
+metric: "기획 전 사이클 1인 완성"
+context: "문제 정의 → UX 여정 분석 → 기능 우선순위 결정 → IA 설계 → 발표 자료 제작"
+significance: "비개발자가 기획만으로 팀을 리드해 수상"
+metric: "실제 서비스 배포"
+context: "Next.js 15 기반 실제 동작하는 서비스 구현 및 Vercel 배포"
+significance: "기획자가 직접 구현 → 기획·개발 경계를 넘는 실행력 증명"
+
+retrospective:
+label: "회고"
+gained: |
+이번 해커톤에서 가장 크게 배운 것은,
+실제로 동작하는 서비스를 만드는 일이 화면 기획과 얼마나 다른 일인지다.
+동일한 기능 하나도 사용자의 상태(비로그인/프로필 미설정/팀원/팀장/대회 Phase)에 따라
+화면과 권한이 달라져야 하고, 그 경우의 수를 모두 정의해야 서비스가 끊기지 않는다.
+뒷단 로직을 직접 설계하고 구현하는 과정이, 서비스 기획자로서 시스템 전체를 입체적으로
+이해하는 데 결정적인 경험이 됐다.
+limitation: |
+아쉬운 점도 분명하다.
+MAXER는 결국 기존 해커톤 플랫폼들과 큰 틀은 같고,
+그 안에서 추천·협업·제출의 편의성을 더한 구조다.
+실제로 사용자가 이 플랫폼을 쓸 때 어느 지점에서 이탈하는지,
+추천 기능이 실제로 팀 구성에 도움이 되는지,
+베이스캠프가 외부 도구를 실제로 대체하는지—
+이것들은 소수의 실사용자라도 직접 테스트해야 나오는 데이터다.
+제품의 가치는 기획과 구현이 아니라, 실제 사용자의 행동에서 검증된다는 것을
+이번 프로젝트가 다시 확인시켜줬다.
+운영까지 이어가지 못한 것이 가장 큰 아쉬움으로 남는다.
+next_step: |
+고도화 계획 (단계별):
+Step 1 (대회 종료 후 1주일 이내): 결과물 제출·현황 관리 / 마이페이지 자동 반영 / Phase-Aware 리더보드
+Step 2 (1개월 이내): AI 일정 어시스턴트 / 스마트 리소스 핀 / match-ai.ts(Genkit) 활성화로 추천 고도화
+Step 3 (3개월~): 팀원 간 상호 리뷰·협업 온도 시스템 / 개인별 포트폴리오 공개 URL 생성 / 서버 연동
+image_award: "[IMAGE: 수상 현장 사진]"
